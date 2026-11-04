@@ -6,8 +6,8 @@ customer for a missing detail, or hands the ticket to a person with a written
 handoff. Everything it works with is fictional: the product (Quillstack), its
 17 help articles and 36 tickets.
 
-All the results below come from a version that analyses tickets with
-hand-written rules, which use no AI model and give the same answer every time.
+All the results below come from the offline version, which analyses tickets
+with hand-written rules: no AI model, and the same answer every time.
 The version that uses Claude for the analysis is written and tested against a
 stand-in for the API, but it has never made a real API call, so it is
 unmeasured. The [demo](https://drriyaa12.github.io/lily-support-agent/) shows
@@ -57,7 +57,7 @@ none they have. A question counts only if it asks for exactly the missing
 details. An escalation counts if the decision is right. Every handoff Lily
 wrote was also complete.
 
-| | Lily (rules) | Baseline |
+| | Lily (offline) | Baseline |
 |---|---|---|
 | Development tickets (26): right decision | 25 | 11 |
 | Development tickets (26): right decision and correct response | 25 | 9 |
@@ -116,7 +116,10 @@ lists what was and wasn't verified.
 ## What I'd do next
 
 First, I would run the Claude version on both ticket sets and compare it with
-the rules. Then I would add tickets written and labelled by people, and
+the offline version. The decision rules are the same in both, so any
+difference would come from how each version reads the tickets, for example
+whether it sees that "swapped in our new card" means the card was already
+replaced. Then I would add tickets written and labelled by people, and
 tickets that try to steer the agent with hidden instructions. Longer term, the
 investigator needs sources beyond the help articles and the status page, such
 as account and billing lookups, before it could work on real tickets.
