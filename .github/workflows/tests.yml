@@ -1,0 +1,26 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.13"]
+    # Official Python images: no setup step, and 3.9 stays available after its end of life.
+    container: python:${{ matrix.python }}-slim
+    steps:
+      - uses: actions/checkout@v7
+      - name: Unit and integration tests
+        run: python -m unittest discover -s tests -t .
+      - name: Published results match the code
+        run: python -m lily verify

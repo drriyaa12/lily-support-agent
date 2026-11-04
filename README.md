@@ -1,5 +1,10 @@
 # Lily
 
+[![tests](https://github.com/drriyaa12/lily-support-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/drriyaa12/lily-support-agent/actions/workflows/tests.yml)
+
+**[Open the demo](https://drriyaa12.github.io/lily-support-agent/)** to browse all 36 tickets and see how
+Lily decided each one, next to the baseline. Nothing to install.
+
 Lily is a small support agent. It reads a customer ticket, investigates it
 against a knowledge base, the ticket history and a status page, and then does
 one of three things:
@@ -31,11 +36,13 @@ cd lily-support-agent
 python3 -m unittest discover -s tests -t .
 python3 -m lily run C17
 python3 -m lily eval
+python3 -m lily verify
 ```
 
 The first command runs the tests, the second prints one ticket's full
-transcript, and the third compares Lily with the baseline on the 26 development
-cases.
+transcript, the third compares Lily with the baseline on the 26 development
+cases, and the fourth re-runs everything and checks that it matches what's
+published.
 
 `run` takes a case ID from `eval/cases.json` or `eval/heldout_cases.json`, or a
 path to a ticket JSON file. A ticket file has the same shape as a `ticket` in
@@ -223,9 +230,20 @@ labelled attempt and invents none. Full definitions are at the bottom of each
 ```bash
 python3 -m lily eval
 python3 -m lily eval --cases eval/heldout_cases.json
+python3 -m lily site
+python3 -m lily verify
 ```
 
-The first writes `results/heuristic-dev/`, the second `results/heuristic-heldout/`.
+The first writes `results/heuristic-dev/`, the second `results/heuristic-heldout/`,
+and the third rebuilds the demo page (`docs/index.html`). The fourth re-runs both
+evaluations and rebuilds the page in a temporary folder, then fails if any
+results file, report, transcript or the demo page differs from what's committed.
+The README's own tables are written by hand from `summary.md` and are not
+checked automatically.
+
+**Automatic checks.** Every push to `main` and every pull request runs the tests
+on Python 3.9 and 3.13, plus `python3 -m lily verify`. The badge at the top
+shows the latest result.
 
 ## Results
 
@@ -371,7 +389,9 @@ eval/                         development cases, held-out cases, labelling guide
 results/heuristic-dev/        report, metrics and transcripts: development set
 results/heuristic-heldout/    the same for the held-out set
 results/heldout-first-run/    the first held-out run, before the review fixes
+docs/index.html               the demo page (built by python3 -m lily site, served by GitHub Pages)
 docs/                         design notes, how Claude Code was used
+.github/workflows/tests.yml   the automatic checks
 ```
 
 ## How this was built

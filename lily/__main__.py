@@ -79,6 +79,24 @@ def cmd_eval(args) -> None:
     print(f"Report: {out / 'summary.md'}")
 
 
+def cmd_site(args) -> None:
+    from lily.site import build_site
+
+    print(f"Wrote {build_site(ROOT).relative_to(ROOT)}")
+
+
+def cmd_verify(args) -> None:
+    from lily.verify import verify
+
+    problems = verify(ROOT)
+    if problems:
+        print("The published results differ from what the code produces now:")
+        for problem in problems:
+            print(f"- {problem}")
+        sys.exit(1)
+    print("OK: results/heuristic-dev, results/heuristic-heldout and docs/index.html match what the code produces now.")
+
+
 def main(argv=None) -> None:
     parser = argparse.ArgumentParser(prog="python3 -m lily",
                                      description="Lily: a support agent that resolves, clarifies or escalates tickets.")
@@ -104,6 +122,12 @@ def main(argv=None) -> None:
     ev.add_argument("--out", help="output folder (default: results/<analyzer>-<dev|heldout>)")
     analyzer_options(ev)
     ev.set_defaults(func=cmd_eval)
+
+    site = sub.add_parser("site", help="rebuild the demo page (docs/index.html) from the labelled cases")
+    site.set_defaults(func=cmd_site)
+
+    ver = sub.add_parser("verify", help="check that the published results and demo page match the code")
+    ver.set_defaults(func=cmd_verify)
 
     args = parser.parse_args(argv)
     try:
