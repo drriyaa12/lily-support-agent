@@ -10,7 +10,7 @@ intended behaviour.
 
 | Work | Done by |
 |---|---|
-| Project brief: requirements, scope, fictional data, evaluation categories; the name "Lily" | Repository owner |
+| Project brief: requirements (including the baseline comparison), scope, fictional data, evaluation categories; the name "Lily" | Repository owner |
 | Architecture and design choices (`docs/design.md`) | Claude Code, for the owner to review |
 | All code in `lily/` and all tests in `tests/` | Claude Code |
 | Fictional knowledge base (`data/kb/`) and status page (`data/status.json`) | Claude Code |
@@ -18,7 +18,7 @@ intended behaviour.
 | Held-out cases (`eval/heldout_cases.json`) | A separate Claude Code agent |
 | Blind audit of the held-out labels | Three more Claude Code agents |
 | Pre-publish review (50 agents), a second check (40 agents), and the fixes that followed | Claude Code |
-| Decisions to publish, final review of claims | Repository owner |
+| Decisions to publish, including the license, the demo page and the automatic checks; final review of claims | Repository owner |
 
 ## How the evaluation data was produced
 
@@ -97,21 +97,21 @@ Two findings were only partly fixed:
 After those fixes, a second workflow of 40 agents re-checked the finished
 repository: every claim in the docs against the result files, a fresh copy run
 with the README's commands, a review of the fixes for new bugs, and
-confidentiality. It confirmed 27 findings and refuted 5. All but one were fixed,
-each code fix again with a failing test first:
+confidentiality. It confirmed 27 findings and refuted 5. All were fixed, each
+code fix again with a failing test first:
 
 | Area | Confirmed | Examples |
 |---|---|---|
 | Regressions and older bugs | 11 | a sentence ending in "?" hid reported attempts (high severity, introduced by the first round); "We noticed X and reinstalled" missed the reinstall; one generic word ("allow") counted as a step; a Free-plan customer asking about an upgrade lost a real conflict; a value equal to a limit escalated needlessly; "Windows" and "macOS Sonoma 14.2.1" misread; "logged myself out", "cleared the cache" and "resetting" missed; the baseline's replies were signed as Lily |
 | Docs claims | 7 | the H06 miss was misexplained; H01's correct score was an accident (above); "Measured vs intended" totals didn't match their labels; the prompt-injection claim was too strong; the review summary overclaimed; raw-output contents and the settings file were described too broadly |
 | Reproducibility | 4 | README commands with trailing `#` comments fail when pasted into macOS's default shell (zsh); the ticket file format wasn't documented and a wrong-shaped file was read silently; Claude mode without a key ended in a traceback; the H06 explanation contradicted its transcript |
-| Publication | 5 | the same overclaims, the baseline's signature, ordering claims stated as fact, and one item that needs the repository owner (below) |
+| Publication | 5 | the same overclaims, the baseline's signature, ordering claims stated as fact, and one item that needed the repository owner (below) |
 
-The item not fixed here: when PR #1 was merged with GitHub's merge button, the
-merge commit GitHub created recorded the owner's personal email address as its
-author. Every commit made in this project uses the owner's private GitHub
-no-reply address. Fixing this needs the owner to turn on GitHub's email-privacy
-setting, and optionally to remove that commit from the public history. Later
+The item that needed the owner: when PR #1 was merged with GitHub's merge
+button, the merge commit GitHub created recorded the owner's personal email
+address as its author. Every other commit in this project uses the owner's
+private GitHub no-reply address. The owner turned on GitHub's email-privacy
+setting, and the merge commit was removed from the history of `main`. Later
 changes are merged without GitHub's merge button, so this can't recur.
 
 ## What was verified

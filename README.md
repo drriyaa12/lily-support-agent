@@ -5,6 +5,9 @@
 **[Open the demo](https://drriyaa12.github.io/lily-support-agent/)** to browse all 36 tickets and see how
 Lily decided each one, next to the baseline. Nothing to install.
 
+The [case study](docs/case-study.md) is a short write-up of the design, the
+evaluation and where Lily fails.
+
 Lily is a small support agent. It reads a customer ticket, investigates it
 against a knowledge base, the ticket history and a status page, and then does
 one of three things:
@@ -347,9 +350,10 @@ compared every docs claim with the results, reproduced everything from a fresh
 copy, reviewed the fixes for new bugs and re-checked confidentiality. It
 confirmed 27 more findings and refuted 5. The confirmed ones include a regression
 the first fixes had introduced (a question mark hid reported attempts) and the
-H01 misreading above. They were fixed the same way, except one that needs the
-repository owner (a personal email address in one GitHub merge commit). Details
-are in [`docs/claude-code-assistance.md`](docs/claude-code-assistance.md).
+H01 misreading above. They were fixed the same way. The one that needed the
+repository owner, a personal email address in a GitHub merge commit, was fixed
+by removing that commit from the history of `main`. Details are in
+[`docs/claude-code-assistance.md`](docs/claude-code-assistance.md).
 
 ## Limitations
 
