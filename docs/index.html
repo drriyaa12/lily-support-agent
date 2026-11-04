@@ -48,7 +48,7 @@ h3 { font-size: 1.15rem; margin: 28px 0 8px; }
 .controls { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 14px; }
 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); padding: 3px; }
 .seg button { font: inherit; font-size: 0.92rem; color: var(--muted); background: none; border: 0; border-radius: 999px; padding: 5px 12px; cursor: pointer; }
-.seg button[aria-checked="true"] { background: var(--ink); color: var(--paper); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.92rem; color: var(--muted); margin: 0 0 10px; }
 .legend span { display: inline-flex; align-items: center; gap: 7px; }
 .swatch { width: 22px; height: 16px; border-radius: 4px; background: var(--resolve-tint); border: 1px solid var(--line); }
@@ -146,8 +146,8 @@ summary { cursor: pointer; font-weight: 600; }
   <section aria-labelledby="board-title">
     <h2 id="board-title">Every ticket, and who got it right</h2>
     <div class="controls">
-      <div class="seg" role="radiogroup" aria-label="Which tickets" id="set-filter"></div>
-      <div class="seg" role="radiogroup" aria-label="Show" id="miss-filter"></div>
+      <div class="seg" role="group" aria-label="Which tickets" id="set-filter"></div>
+      <div class="seg" role="group" aria-label="Show" id="miss-filter"></div>
     </div>
     <p class="legend" aria-hidden="true">
       <span><i class="m-lily"></i>Lily's decision</span>
@@ -220,10 +220,10 @@ summary { cursor: pointer; font-weight: 600; }
 
   function segmented(container, key, options) {
     options.forEach(function (opt) {
-      var b = el("button", { type: "button", role: "radio", "aria-checked": String(state[key] === opt[0]), text: opt[1] });
+      var b = el("button", { type: "button", "aria-pressed": String(state[key] === opt[0]), text: opt[1] });
       b.addEventListener("click", function () {
         state[key] = opt[0];
-        Array.prototype.forEach.call(container.children, function (c) { c.setAttribute("aria-checked", String(c === b)); });
+        Array.prototype.forEach.call(container.children, function (c) { c.setAttribute("aria-pressed", String(c === b)); });
         renderRows();
       });
       container.appendChild(b);
