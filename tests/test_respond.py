@@ -2,11 +2,11 @@ import unittest
 from datetime import datetime, timezone
 
 from tests.helpers import make_article, make_investigation
-from triage.fields import FIELDS
-from triage.models import AttemptedStep, Conflict
-from triage.policy import decide
-from triage.respond import build_handoff, compose_reply
-from triage.status import Incident
+from lily.fields import FIELDS
+from lily.models import AttemptedStep, Conflict
+from lily.policy import decide
+from lily.respond import SIGNATURE, build_handoff, compose_reply
+from lily.status import Incident
 
 
 def tried(article_id, *steps, how="customer_reported"):
@@ -76,6 +76,31 @@ class HandoffTests(unittest.TestCase):
         for line in handoff.attempted_fixes + handoff.unresolved_questions:
             self.assertIn(line, markdown)
 
+
+class ImpossibleStepWordingTests(unittest.TestCase):
+    def test_impossible_steps_are_not_called_tried(self):
+        inv = make_investigation([make_article()],
+                                 attempted=tried("KB-1", 1, how="not_possible") + tried("KB-1", 2))
+        text = compose_reply(decide(inv), inv)
+        self.assertIn("Thanks for already trying these: step 2.", text)
+        self.assertIn("isn't possible for you: step 1.", text)
+        self.assertNotIn("step 1, step 2", text)
+
+
+
+class SignatureTests(unittest.TestCase):
+    def test_every_reply_is_signed_by_lily_as_an_ai_assistant(self):
+        self.assertIn("Lily", SIGNATURE)
+        self.assertIn("AI", SIGNATURE)
+        for inv in (make_investigation([make_article()]),                 # resolve
+                    make_investigation([make_article(required=["os"])]),  # clarify
+                    make_investigation([])):                              # escalate
+            with self.subTest(action=decide(inv).action):
+                self.assertTrue(compose_reply(decide(inv), inv).endswith(SIGNATURE))
+
+    def test_handoff_says_who_prepared_it(self):
+        inv = make_investigation([make_article()], attempted=tried("KB-1", 1, 2, 3, 4))
+        self.assertIn("Prepared by Lily", build_handoff(decide(inv), inv).to_markdown())
 
 if __name__ == "__main__":
     unittest.main()

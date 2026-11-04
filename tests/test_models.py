@@ -1,7 +1,8 @@
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from tests.helpers import make_ticket
+from lily.models import Ticket, parse_time
 
 
 class TicketTests(unittest.TestCase):
@@ -19,6 +20,29 @@ class TicketTests(unittest.TestCase):
 
     def test_first_name(self):
         self.assertEqual(make_ticket("x", name="Priya N.").first_name, "Priya")
+
+
+class RobustnessTests(unittest.TestCase):
+    """Review findings: blank fields crashed, and some timestamp forms failed or were not UTC."""
+
+    def test_null_fields_get_safe_defaults(self):
+        t = Ticket.from_dict({"id": "T-1", "created_at": "2026-11-04T15:20:00Z", "customer": None,
+                              "subject": None, "messages": [{"role": "customer", "text": None}]})
+        self.assertEqual((t.first_name, t.subject, t.customer_messages), ("there", "", [""]))
+
+    def test_blank_name_falls_back_to_there(self):
+        self.assertEqual(make_ticket("x", name="   ").first_name, "there")
+
+    def test_timestamps_are_normalised_to_utc(self):
+        for text, expected in [
+            ("2026-11-04T15:20:00", datetime(2026, 11, 4, 15, 20, tzinfo=timezone.utc)),
+            ("2026-11-04T17:20:00+0200", datetime(2026, 11, 4, 15, 20, tzinfo=timezone.utc)),
+            ("2026-11-04T15:20:00.5Z", datetime(2026, 11, 4, 15, 20, 0, 500000, tzinfo=timezone.utc)),
+        ]:
+            with self.subTest(text=text):
+                parsed = parse_time(text)
+                self.assertEqual(parsed, expected)
+                self.assertEqual(parsed.utcoffset(), timedelta(0))
 
 
 if __name__ == "__main__":

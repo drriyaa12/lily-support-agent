@@ -1,9 +1,9 @@
 import unittest
 
 from tests.helpers import make_ticket, real_kb
-from triage.heuristic import HeuristicAnalyzer, find_attempts, is_low_information, reports_failure
-from triage.retrieval import BM25Index
-from triage.text import normalise_quote
+from lily.heuristic import HeuristicAnalyzer, find_attempts, is_low_information, reports_failure, summarize
+from lily.retrieval import BM25Index
+from lily.text import normalise_quote
 
 
 def steps_of(attempts):
@@ -112,6 +112,38 @@ class HeuristicAnalyzerTests(unittest.TestCase):
         self.assertEqual(analysis.evidence[0].source_id, "KB-104")
         self.assertIn(normalise_quote(analysis.evidence[0].quote), normalise_quote(self.kb["KB-104"].text))
         self.assertEqual(analysis.provided_info.get("os"), "macOS 15")
+
+
+class AttemptFalsePositiveTests(unittest.TestCase):
+    """Review finding: statements of need, questions and incidental words were read as attempts."""
+
+    def setUp(self):
+        self.kb = real_kb()
+
+    def test_statements_of_need_are_not_attempts(self):
+        t = make_ticket("Our card payment failed and I need to update the payment method for our workspace "
+                        "subscription. How do I replace the card?")
+        self.assertEqual(find_attempts(t, self.kb["KB-201"]), [])
+
+    def test_questions_about_steps_are_not_attempts(self):
+        t = make_ticket("Do I need to update to the latest version, sign out and back in, reset the local cache "
+                        "or reinstall the app?")
+        self.assertEqual(find_attempts(t, self.kb["KB-104"]), [])
+
+    def test_a_question_that_reports_an_attempt_still_counts(self):
+        t = make_ticket("I've already reinstalled the app, what else can I do?")
+        self.assertEqual(steps_of(find_attempts(t, self.kb["KB-104"])), [4])
+
+    def test_plan_names_and_time_units_do_not_identify_a_step(self):
+        t = make_ticket("We upgraded to the annual Business plan 20 days ago, but it turns out we don't need it.")
+        self.assertEqual(find_attempts(t, self.kb["KB-202"]), [])
+
+    def test_a_sync_log_is_not_signing_out(self):
+        t = make_ticket("I already attached the sync log to my last email.")
+        self.assertEqual(find_attempts(t, self.kb["KB-104"]), [])
+
+    def test_summary_survives_an_empty_latest_message(self):
+        self.assertNotIn("Latest message", summarize(make_ticket("My desktop app is not syncing.", "")))
 
 
 if __name__ == "__main__":

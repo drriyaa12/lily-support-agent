@@ -1,6 +1,6 @@
 import unittest
 
-from triage.fields import extract_info
+from lily.fields import extract_info
 
 
 class ExtractInfoTests(unittest.TestCase):
@@ -16,6 +16,12 @@ class ExtractInfoTests(unittest.TestCase):
         ("app_version", "I'm on version 4.8.2 now", "4.8.2"),
         ("app_version", "on macOS 15", None),
         ("account_email", "My email is priya.n@northfield-studio.example.", "priya.n@northfield-studio.example"),
+        # Review finding: an OS version is not the app version, and "browser windows" is not an OS.
+        ("app_version", "I'm on macOS 14.2.1 and the app crashes", None),
+        ("os", "I'm on macOS 14.2.1 and the app crashes", "macOS 14.2"),
+        ("app_version", "Quillstack 4.6.2 on macOS 14.2.1", "4.6.2"),
+        ("os", "I have too many browser windows open", None),
+        ("os", "the desktop app on Windows keeps crashing", "Windows"),
     ]
 
     def test_table(self):

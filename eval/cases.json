@@ -481,8 +481,8 @@
       "reason": "policy_escalation",
       "evidence_any": ["KB-103"],
       "missing_info": [],
-      "attempted_steps": {},
-      "rationale": "KB-103 says suspected compromise is always escalated to Trust & Safety."
+      "attempted_steps": {"KB-103": [1]},
+      "rationale": "KB-103 says suspected compromise is always escalated to Trust & Safety. The customer has already changed their password (step 1)."
     }
   },
   {

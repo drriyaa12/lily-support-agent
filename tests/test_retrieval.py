@@ -1,8 +1,8 @@
 import unittest
 
 from tests.helpers import real_kb
-from triage.kb import parse_article
-from triage.retrieval import BM25Index
+from lily.kb import parse_article
+from lily.retrieval import BM25Index
 
 
 def article(aid, title, body):

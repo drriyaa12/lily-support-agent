@@ -1,6 +1,6 @@
 import unittest
 
-from triage.text import sentences, tokenize
+from lily.text import sentences, tokenize
 
 
 class TokenizeTests(unittest.TestCase):
@@ -25,6 +25,17 @@ class SentenceTests(unittest.TestCase):
     def test_splits_on_terminal_punctuation_and_newlines(self):
         text = "First one. Second one? Third!\nFourth"
         self.assertEqual(sentences(text), ["First one.", "Second one?", "Third!", "Fourth"])
+
+
+class LogPhraseTests(unittest.TestCase):
+    """Review finding: the synonym log -> sign turned "sync log" into "sign"."""
+
+    def test_log_in_and_out_mean_sign(self):
+        self.assertEqual(tokenize("I logged in"), ["sign"])
+        self.assertEqual(tokenize("log out and back in"), ["sign"])
+
+    def test_a_log_file_is_not_signing_in(self):
+        self.assertNotIn("sign", tokenize("I attached the sync log"))
 
 
 if __name__ == "__main__":

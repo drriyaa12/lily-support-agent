@@ -2,9 +2,9 @@ import unittest
 from datetime import datetime, timezone
 
 from tests.helpers import make_article as article, make_investigation as investigation
-from triage.models import AttemptedStep, Conflict
-from triage.policy import decide
-from triage.status import Incident
+from lily.models import AttemptedStep, Conflict
+from lily.policy import decide
+from lily.status import Incident
 
 
 def attempts(article_id, *steps):
@@ -70,6 +70,13 @@ class PolicyRuleTests(unittest.TestCase):
     def test_article_without_steps_resolves_with_its_text(self):
         d = decide(investigation([article(steps=0)]))
         self.assertEqual((d.action, d.reason, d.steps), ("resolve", "supported_fix", []))
+
+
+class TraceTests(unittest.TestCase):
+    def test_trace_does_not_claim_an_overridden_rule_fired(self):
+        d = decide(investigation([article()], low_information=True))
+        self.assertEqual(d.action, "resolve")
+        self.assertIn("not applied", d.trace[2])
 
 
 if __name__ == "__main__":

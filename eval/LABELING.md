@@ -34,11 +34,15 @@ When several apply, the first one wins:
 
 - `evidence_any`: for `resolve` cases, the reply must cite at least one of these sources. For other decisions it records which sources a reviewer would expect in the handoff.
 - `missing_info`: for `clarify` cases, the fields the agent must ask for.
-- `attempted_steps`: steps the customer already tried, or that are impossible for them, by article ID and step number. A `resolve` reply must not repeat these steps.
+- `attempted_steps`: steps the customer already tried, or that are impossible for them, by article ID and step number. A `resolve` reply must not repeat these steps. Giving a detail an article asks for (such as an invoice number) is not an attempted step.
 
 ## How these labels were made
 
 The cases and labels were written by Claude Code (an AI coding assistant) from
 this guide **before** any agent code existed, and were not changed afterwards
-to fit the agent. The same assistant then wrote the agent, so the cases are a
-development set, not an independent test: see "Limitations" in the README.
+to fit the agent, with one exception. The pre-publish review found that C22's
+label left out a step the ticket states ("I've already changed my password"),
+so C22 now lists KB-103 step 1 as attempted. Its decision did not change. The
+same assistant then wrote the agent, so these cases are a development set, not
+an independent test. The 10 held-out cases in `heldout_cases.json` were written
+separately (see `docs/claude-code-assistance.md`).

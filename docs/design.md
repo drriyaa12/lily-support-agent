@@ -1,4 +1,4 @@
-# Design notes
+# Design notes: Lily
 
 Why the code is shaped the way it is, in the order a reviewer meets it. Each
 choice lists what it costs.
@@ -7,7 +7,7 @@ choice lists what it costs.
 
 The analyzer (offline rules or Claude) only reports facts: which articles
 apply, what the customer already tried, what details they gave, whether
-articles disagree. A fixed, ordered policy in `triage/policy.py` turns those
+articles disagree. A fixed, ordered policy in `lily/policy.py` turns those
 facts into resolve, clarify or escalate.
 
 - **Why:** the part that decides what a customer is told stays auditable and
@@ -31,7 +31,7 @@ analysis step, with structured output.
 
 ## 3. The investigator checks everything the analyzer claims
 
-`triage/investigator.py` gathers evidence from three sources (KB search, the
+`lily/investigator.py` gathers evidence from three sources (KB search, the
 ticket thread through the analyzer, the status page) and drops any claim it
 cannot verify:
 
@@ -55,11 +55,12 @@ details, exhausted fixes, grounding). Each rule writes one line to
 `Decision.trace`, so every decision in `results/*/transcripts/` can be read
 step by step.
 
-## 5. Replies come from templates and KB text
+## 5. Replies come from templates and KB text, and are signed by Lily
 
 The customer reply is assembled from the article's own steps (only the ones not
 yet tried) or the status page's public message. Nothing the customer is told
-is generated freely.
+is generated freely. Every reply ends with Lily's signature, which says it comes
+from an AI assistant, and every handoff says Lily prepared it.
 
 - **Why:** every instruction can be traced to a source. A ticket that contains
   instructions aimed at the model (prompt injection) cannot change what the
@@ -75,7 +76,7 @@ is generated freely.
 - **Cost:** it matches words, not meaning. C25 (a request to re-issue an invoice)
   matches the refund article on the word "invoice", and the offline agent sends
   refund steps. The relevance threshold (7.5) was chosen by looking at scores on
-  the development cases (`triage/settings.py`).
+  the development cases (`lily/settings.py`).
 
 ## 7. Conflicts are checked for whether they matter
 
@@ -110,11 +111,18 @@ not from better retrieval.
 ## 10. How the evaluation counts
 
 - A resolution only counts as correct if the case should be resolved, it cites
-  an expected source, **and** it does not repeat a step the customer already
-  tried.
-- An analyzer failure (API refusal, unreadable output) is its own bucket. It is
-  never counted as an appropriate escalation, even though the agent does
-  escalate in that situation.
+  an expected source, it does not repeat a step the customer already tried,
+  **and** it includes every step they have not tried. (The pre-publish review
+  showed that a looser rule could hide a step dropped by a false "already
+  tried".)
+- A clarifying question must ask for exactly the details the labels list.
+- A handoff is only complete if it lists every labelled attempted step and
+  claims none that the labels do not support.
+- An analyzer failure (API error, refusal, unreadable output) is its own bucket
+  and its own column in the confusion matrix. It never counts as a correct
+  decision, even though Lily does escalate in that situation.
+- Each report says which set it covers (development or held-out), and the
+  held-out set has its own folder.
 - "Right reason" is reported separately from "right decision", so an
   escalation for the wrong reason is visible.
 - Each case gets a full transcript (ticket, investigation log, evidence, rule
@@ -124,7 +132,7 @@ not from better retrieval.
 ## 11. Offline first, with replay for Claude runs
 
 The default analyzer needs no key, so anyone can reproduce the offline results
-exactly. A Claude run saves every raw model output (`results/claude/raw/`), and
+exactly. A Claude run saves every raw model output (`results/claude-dev/raw/`), and
 `--analyzer replay` re-scores those saved outputs without calling the API, so a
 published Claude result can be checked without spending money or depending on
 sampling.
@@ -138,5 +146,10 @@ sampling.
 - Server-side refusal fallbacks (`fallbacks: "default"`) on models that support
   them. A refusal or a truncated response becomes an `analysis_error`, which
   escalates the ticket.
-- The credential is read by the SDK from `ANTHROPIC_API_KEY`. It is never
-  written to disk or logs. `.env` is git-ignored.
+- A network error, timeout, rate limit or server error that persists after the
+  SDK's own retries is also recorded as an `analysis_error`, and the run
+  continues. Configuration errors (a bad key, an invalid request) stop the run.
+- The Anthropic SDK finds the credential itself (`ANTHROPIC_API_KEY`,
+  `ANTHROPIC_AUTH_TOKEN` or an `ant auth login` profile). Lily never logs or
+  stores it, and saved raw outputs contain only the model's JSON, token counts,
+  stop reason and any error. `.env` is git-ignored.

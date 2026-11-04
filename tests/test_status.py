@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 
 from tests.helpers import DATA
-from triage.status import Incident, active_incidents, load_status
+from lily.status import Incident, active_incidents, load_status
 
 
 def at(text):
@@ -33,6 +33,12 @@ class IncidentTests(unittest.TestCase):
     def test_loads_repository_status_file(self):
         incidents = load_status(DATA / "status.json")
         self.assertIn("INC-2207", [i.id for i in incidents])
+
+
+class IncidentStatusTests(unittest.TestCase):
+    def test_resolved_status_without_end_time_is_inactive(self):
+        incident = Incident("INC-3", "sync", "Old", "resolved", at("2026-11-01T00:00:00Z"), None, "Fixed.")
+        self.assertFalse(incident.active_at(at("2026-11-04T00:00:00Z")))
 
 
 if __name__ == "__main__":

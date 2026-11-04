@@ -1,13 +1,15 @@
 """ClaudeAnalyzer against a fake client shaped like the Anthropic SDK (no network, no key)."""
 import copy
 import json
+import os
 import tempfile
 import unittest
 from types import SimpleNamespace
+from unittest import mock
 
 from tests.helpers import make_ticket
-from triage.agent import build_agent, load_resources
-from triage.claude_analyzer import ClaudeAnalyzer, ReplayAnalyzer
+from lily.agent import build_agent, load_resources
+from lily.claude_analyzer import ClaudeAnalyzer, ReplayAnalyzer
 
 
 class FakeMessages:
@@ -17,6 +19,39 @@ class FakeMessages:
     def create(self, **kwargs):
         self.calls.append(kwargs)
         return self.response
+
+
+class RaisingMessages:
+    def __init__(self, error):
+        self.error = error
+
+    def create(self, **kwargs):
+        raise self.error
+
+
+class APIConnectionError(Exception):
+    """Same name as the SDK's connection error. The analyzer classifies errors by class name and status code."""
+
+
+class APIStatusError(Exception):
+    def __init__(self, status_code):
+        super().__init__(f"HTTP {status_code}")
+        self.status_code = status_code
+
+
+def raising_client(error):
+    return SimpleNamespace(messages=RaisingMessages(error), beta=SimpleNamespace(messages=RaisingMessages(error)))
+
+
+class CleanEnvironment(unittest.TestCase):
+    """Review finding: exported SUPPORT_AGENT_* variables changed what these tests saw."""
+
+    def setUp(self):
+        patcher = mock.patch.dict(os.environ)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        for name in ("SUPPORT_AGENT_MODEL", "SUPPORT_AGENT_EFFORT"):
+            os.environ.pop(name, None)
 
 
 class FakeClient:
@@ -65,7 +100,7 @@ PAYLOAD = {
 }
 
 
-class ClaudeAnalyzerTests(unittest.TestCase):
+class ClaudeAnalyzerTests(CleanEnvironment):
     @classmethod
     def setUpClass(cls):
         _, cls.index, _ = load_resources()
@@ -123,7 +158,24 @@ class ClaudeAnalyzerTests(unittest.TestCase):
                          (original.relevant_ids, original.attempted, original.evidence))
 
 
-class ClaudeGuardrailTests(unittest.TestCase):
+class ClaudeErrorTests(CleanEnvironment):
+    def test_transient_api_errors_become_analysis_errors(self):
+        for error in (APIConnectionError("connection reset"), APIStatusError(529), APIStatusError(429)):
+            with self.subTest(error=repr(error)):
+                analysis = ClaudeAnalyzer(client=raising_client(error)).analyze(TICKET, [])
+                self.assertIn("API error", analysis.error)
+
+    def test_configuration_errors_still_stop_the_run(self):
+        with self.assertRaises(APIStatusError):
+            ClaudeAnalyzer(client=raising_client(APIStatusError(401))).analyze(TICKET, [])
+
+    def test_environment_overrides_model_and_effort(self):
+        os.environ.update(SUPPORT_AGENT_MODEL="claude-sonnet-5-5", SUPPORT_AGENT_EFFORT="high")
+        analyzer = ClaudeAnalyzer(client=FakeClient(sdk_message(PAYLOAD)))
+        self.assertEqual((analyzer.model, analyzer.effort), ("claude-sonnet-5-5", "high"))
+
+
+class ClaudeGuardrailTests(CleanEnvironment):
     def test_invented_quote_and_unretrieved_article_are_dropped_before_deciding(self):
         payload = copy.deepcopy(PAYLOAD)
         payload["relevant_article_ids"] = ["KB-104", "KB-402"]

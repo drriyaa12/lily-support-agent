@@ -1,8 +1,8 @@
 import unittest
 
 from tests.helpers import make_ticket
-from triage.agent import build_agent, build_baseline
-from triage.heuristic import HeuristicAnalyzer
+from lily.agent import build_agent, build_baseline
+from lily.heuristic import HeuristicAnalyzer
 
 
 class SupportAgentTests(unittest.TestCase):

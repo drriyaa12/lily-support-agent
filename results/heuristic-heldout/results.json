@@ -1,0 +1,1297 @@
+{
+  "meta": {
+    "generated": "2026-11-04 20:53 UTC",
+    "command": "python3 -m lily eval --cases eval/heldout_cases.json",
+    "split": "held-out",
+    "analyzer": "heuristic",
+    "analyzer_description": "offline heuristic analyzer (no API calls)",
+    "cases_file": "eval/heldout_cases.json",
+    "cases_sha256": "3eedb5e35ab958e2a227b9946bf5bbd074b7ab9e48bc57e5974aa3ed6be1857d",
+    "n_cases": 10
+  },
+  "metrics": {
+    "agent": {
+      "n": 10,
+      "decision_correct": 6,
+      "reason_correct": 6,
+      "outcomes": {
+        "correct_resolution": 3,
+        "incorrect_resolution": 2,
+        "appropriate_escalation": 2,
+        "unnecessary_escalation": 1,
+        "missed_escalation": 1,
+        "correct_clarification": 1,
+        "incorrect_clarification": 0,
+        "unnecessary_clarification": 0,
+        "analysis_error": 0
+      },
+      "by_category": {
+        "routine": [
+          2,
+          2
+        ],
+        "known_incident": [
+          1,
+          1
+        ],
+        "missing_info": [
+          1,
+          2
+        ],
+        "conflicting_guidance": [
+          0,
+          1
+        ],
+        "failed_fix": [
+          1,
+          2
+        ],
+        "policy_escalation": [
+          1,
+          1
+        ],
+        "no_kb_coverage": [
+          0,
+          1
+        ]
+      },
+      "repeated_failed_fix": 1,
+      "unlabelled_attempts": 1,
+      "handoffs": [
+        3,
+        3
+      ],
+      "escalation_sources": [
+        2,
+        2
+      ],
+      "confusion": {
+        "resolve->resolve": 3,
+        "clarify->clarify": 1,
+        "clarify->escalate": 1,
+        "escalate->resolve": 2,
+        "escalate->escalate": 2,
+        "escalate->clarify": 1
+      }
+    },
+    "baseline": {
+      "n": 10,
+      "decision_correct": 3,
+      "reason_correct": 2,
+      "outcomes": {
+        "correct_resolution": 1,
+        "incorrect_resolution": 8,
+        "appropriate_escalation": 0,
+        "unnecessary_escalation": 1,
+        "missed_escalation": 0,
+        "correct_clarification": 0,
+        "incorrect_clarification": 0,
+        "unnecessary_clarification": 0,
+        "analysis_error": 0
+      },
+      "by_category": {
+        "routine": [
+          1,
+          2
+        ],
+        "known_incident": [
+          0,
+          1
+        ],
+        "missing_info": [
+          0,
+          2
+        ],
+        "conflicting_guidance": [
+          0,
+          1
+        ],
+        "failed_fix": [
+          0,
+          2
+        ],
+        "policy_escalation": [
+          0,
+          1
+        ],
+        "no_kb_coverage": [
+          0,
+          1
+        ]
+      },
+      "repeated_failed_fix": 6,
+      "unlabelled_attempts": 0,
+      "handoffs": [
+        1,
+        1
+      ],
+      "escalation_sources": [
+        0,
+        0
+      ],
+      "confusion": {
+        "resolve->resolve": 3,
+        "clarify->resolve": 1,
+        "clarify->escalate": 1,
+        "escalate->resolve": 5
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "H01",
+      "category": "routine",
+      "expected": {
+        "decision": "resolve",
+        "reason": "supported_fix",
+        "evidence_any": [
+          "KB-201"
+        ],
+        "missing_info": [],
+        "attempted_steps": {
+          "KB-201": [
+            1,
+            2
+          ]
+        },
+        "rationale": "KB-201 covers a failed subscription payment; the owner has already opened billing settings and replaced the card (steps 1-2) but has not used 'Retry payment' on the open invoice (step 3), so the KB supports a reply with that remaining step."
+      },
+      "agent": {
+        "case_id": "H01",
+        "category": "routine",
+        "expected": "resolve",
+        "expected_reason": "supported_fix",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "correct_resolution",
+        "note": "",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": false,
+        "attempts_found": [
+          2,
+          2
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3001",
+        "system": "Lily",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "KB-201 covers this and 1 step(s) have not been tried yet.",
+        "cited_sources": [
+          "KB-201"
+        ],
+        "steps_offered": [
+          3
+        ],
+        "missing_info": [],
+        "attempted": [
+          {
+            "article_id": "KB-201",
+            "step": 1,
+            "how": "not_possible",
+            "quote": "Yesterday I went into the billing page in settings and swapped in our new card, it saved without any error, but the invoice still shows as past due this afternoon."
+          },
+          {
+            "article_id": "KB-201",
+            "step": 2,
+            "how": "not_possible",
+            "quote": "Yesterday I went into the billing page in settings and swapped in our new card, it saved without any error, but the invoice still shows as past due this afternoon."
+          }
+        ],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-201",
+          "4. Active incident for 'billing'? no",
+          "5. Conflicting guidance that matters? no",
+          "6. Required details missing for KB-201? no",
+          "7. Steps already tried or impossible: [1, 2]; remaining: [3]",
+          "8. Verified quote from KB-201? yes",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Ines,\n\nI understand these aren't possible for you: open billing settings, replace the card. The next steps are:\n\n1. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      },
+      "baseline": {
+        "case_id": "H01",
+        "category": "routine",
+        "expected": "resolve",
+        "expected_reason": "supported_fix",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "repeated a step the customer already tried",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": true,
+        "attempts_found": [
+          0,
+          2
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3001",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-201 scored 24.2, above the threshold.",
+        "cited_sources": [
+          "KB-201"
+        ],
+        "steps_offered": [
+          1,
+          2,
+          3
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-201 (24.2) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Ines,\n\nThanks for getting in touch. Here's what to do:\n\n1. Open billing settings. Go to Settings → Billing. Only the workspace owner can see this page.\n2. Replace the card. Choose \"Update payment method\", enter the new card and save.\n3. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H02",
+      "category": "routine",
+      "expected": {
+        "decision": "resolve",
+        "reason": "supported_fix",
+        "evidence_any": [
+          "KB-105"
+        ],
+        "missing_info": [],
+        "attempted_steps": {},
+        "rationale": "KB-105 covers browser uploads that fail partway. KB-105 (250 MB) and the older KB-106 (100 MB) disagree on the paid-plan file limit, but a 74 MB file is within both, so the disagreement does not change the answer; checking the storage quota (step 2) and uploading from the desktop app, which resumes (step 3), are untried."
+      },
+      "agent": {
+        "case_id": "H02",
+        "category": "routine",
+        "expected": "resolve",
+        "expected_reason": "supported_fix",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "correct_resolution",
+        "note": "",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3002",
+        "system": "Lily",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "KB-105 covers this and 3 step(s) have not been tried yet.",
+        "cited_sources": [
+          "KB-105"
+        ],
+        "steps_offered": [
+          1,
+          2,
+          3
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-105",
+          "4. Active incident for 'files'? no",
+          "5. Conflicting guidance that matters? no",
+          "6. Required details missing for KB-105? no",
+          "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
+          "8. Verified quote from KB-105? yes",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Kwame,\n\nThanks for getting in touch. Here's what to do:\n\n1. Check the file against the size limit. Paid plans accept files up to 250 MB; the Free plan accepts files up to 50 MB.\n2. Check the workspace storage quota. Settings → Usage shows how much storage is left. Uploads fail when the workspace is full.\n3. Upload large files from the desktop app. The desktop app resumes interrupted uploads; browser uploads restart from zero.\n\nThese steps come from our guide \"File uploads fail or stop partway\" (KB-105). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      },
+      "baseline": {
+        "case_id": "H02",
+        "category": "routine",
+        "expected": "resolve",
+        "expected_reason": "supported_fix",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "correct_resolution",
+        "note": "",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3002",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-105 scored 15.8, above the threshold.",
+        "cited_sources": [
+          "KB-105"
+        ],
+        "steps_offered": [
+          1,
+          2,
+          3
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-105 (15.8) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Kwame,\n\nThanks for getting in touch. Here's what to do:\n\n1. Check the file against the size limit. Paid plans accept files up to 250 MB; the Free plan accepts files up to 50 MB.\n2. Check the workspace storage quota. Settings → Usage shows how much storage is left. Uploads fail when the workspace is full.\n3. Upload large files from the desktop app. The desktop app resumes interrupted uploads; browser uploads restart from zero.\n\nThese steps come from our guide \"File uploads fail or stop partway\" (KB-105). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H03",
+      "category": "known_incident",
+      "expected": {
+        "decision": "resolve",
+        "reason": "known_incident",
+        "evidence_any": [
+          "INC-2207"
+        ],
+        "missing_info": [],
+        "attempted_steps": {
+          "KB-104": [
+            2
+          ]
+        },
+        "rationale": "INC-2207 (delayed desktop sync, started 2026-11-04 08:10 UTC, unresolved) was active when this sync ticket arrived, so rule 4 applies ahead of the OS that KB-104 would otherwise require: tell the customer about the incident (changes are not lost and will appear once sync catches up) instead of sending troubleshooting steps."
+      },
+      "agent": {
+        "case_id": "H03",
+        "category": "known_incident",
+        "expected": "resolve",
+        "expected_reason": "known_incident",
+        "predicted": "resolve",
+        "predicted_reason": "known_incident",
+        "outcome": "correct_resolution",
+        "note": "",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": false,
+        "attempts_found": [
+          1,
+          1
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3003",
+        "system": "Lily",
+        "action": "resolve",
+        "reason": "known_incident",
+        "explanation": "INC-2207 (Delayed sync for desktop apps) was active when the ticket arrived.",
+        "cited_sources": [
+          "INC-2207"
+        ],
+        "steps_offered": [],
+        "missing_info": [],
+        "attempted": [
+          {
+            "article_id": "KB-104",
+            "step": 2,
+            "how": "customer_reported",
+            "quote": "I logged out and back in, no difference."
+          }
+        ],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-104",
+          "4. Active incident for 'sync'? INC-2207",
+          "=> resolve (known_incident)"
+        ],
+        "reply": "Hi Hannah,\n\nThanks for letting us know. We're currently investigating an issue that matches what you describe: Delayed sync for desktop apps (INC-2207).\n\nSome desktop apps are syncing changes with a delay of up to two hours. Files are not lost, and changes will appear once sync catches up. We are working on a fix.\n\nThere's no need to troubleshoot on your side. I've linked your ticket to the incident, and we'll update you here when it's resolved.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      },
+      "baseline": {
+        "case_id": "H03",
+        "category": "known_incident",
+        "expected": "resolve",
+        "expected_reason": "known_incident",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "cited ['KB-104'], expected ['INC-2207']",
+        "decision_match": true,
+        "reason_match": false,
+        "repeated_failed_fix": true,
+        "attempts_found": [
+          0,
+          1
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3003",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-104 scored 15.3, above the threshold.",
+        "cited_sources": [
+          "KB-104"
+        ],
+        "steps_offered": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-104 (15.3) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Hannah,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Choose Help → Check for updates and restart the app after installing.\n2. Sign out and back in. This refreshes the sync session without touching local files.\n3. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n4. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H04",
+      "category": "missing_info",
+      "expected": {
+        "decision": "clarify",
+        "reason": "missing_info",
+        "evidence_any": [
+          "KB-107"
+        ],
+        "missing_info": [
+          "app_version"
+        ],
+        "attempted_steps": {
+          "KB-107": [
+            2
+          ]
+        },
+        "rationale": "KB-107 (app closes on launch) requires os and app_version; the customer gives the OS (macOS, in parentheses) but not the Quillstack version, which decides whether the known pre-4.6.0 crash applies, so the agent must ask for it. Restarting the computer (step 2) is already done."
+      },
+      "agent": {
+        "case_id": "H04",
+        "category": "missing_info",
+        "expected": "clarify",
+        "expected_reason": "missing_info",
+        "predicted": "clarify",
+        "predicted_reason": "missing_info",
+        "outcome": "correct_clarification",
+        "note": "",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": false,
+        "attempts_found": [
+          1,
+          1
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3004",
+        "system": "Lily",
+        "action": "clarify",
+        "reason": "missing_info",
+        "explanation": "KB-107 needs app_version before troubleshooting.",
+        "cited_sources": [
+          "KB-107"
+        ],
+        "steps_offered": [],
+        "missing_info": [
+          "app_version"
+        ],
+        "attempted": [
+          {
+            "article_id": "KB-107",
+            "step": 2,
+            "how": "customer_reported",
+            "quote": "I've restarted the laptop a couple of times already and it does exactly the same thing."
+          }
+        ],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-107",
+          "4. Active incident for 'desktop'? no",
+          "5. Conflicting guidance that matters? no",
+          "6. Required details missing for KB-107? app_version",
+          "=> clarify (missing_info)"
+        ],
+        "reply": "Hi Priya,\n\nThanks for getting in touch. So I can point you to the right fix, could you tell me:\n\n- the app version, shown in Help → About (for example, 4.6.2)\n\nAs soon as I have that, I'll take it from there.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      },
+      "baseline": {
+        "case_id": "H04",
+        "category": "missing_info",
+        "expected": "clarify",
+        "expected_reason": "missing_info",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen clarify",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": true,
+        "attempts_found": [
+          0,
+          1
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3004",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-107 scored 9.8, above the threshold.",
+        "cited_sources": [
+          "KB-107"
+        ],
+        "steps_offered": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-107 (9.8) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Priya,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Versions before 4.6.0 have a known start-up crash that updating fixes. Download the latest installer from quillstack.example/download.\n2. Restart the computer. This clears locked files left behind by an earlier crash.\n3. Reset the local cache. Hold Shift while opening the app to start in safe mode, then choose Reset local cache.\n4. Reinstall the app. Uninstall Quillstack, then install the latest version again.\n\nThese steps come from our guide \"Desktop app closes or crashes on launch\" (KB-107). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H05",
+      "category": "missing_info",
+      "expected": {
+        "decision": "clarify",
+        "reason": "low_information",
+        "evidence_any": [],
+        "missing_info": [
+          "issue_details"
+        ],
+        "attempted_steps": {},
+        "rationale": "The customer reports unspecified 'trouble' for several people with no symptom, feature or error (the office move is context, not a symptom), so no article can be chosen; the agent should ask what exactly is going wrong."
+      },
+      "agent": {
+        "case_id": "H05",
+        "category": "missing_info",
+        "expected": "clarify",
+        "expected_reason": "low_information",
+        "predicted": "escalate",
+        "predicted_reason": "no_kb_coverage",
+        "outcome": "unnecessary_escalation",
+        "note": "",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 0,
+        "handoff_complete": true,
+        "escalation_source_match": null,
+        "ticket_id": "T-3005",
+        "system": "Lily",
+        "action": "escalate",
+        "reason": "no_kb_coverage",
+        "explanation": "No knowledge-base article covers this request.",
+        "cited_sources": [],
+        "steps_offered": [],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? no",
+          "=> escalate (no_kb_coverage)"
+        ],
+        "reply": "Hi Marguerite,\n\nThanks for the details. I've passed your request to our Tier 2 Support team with a summary of what you've told us and tried, so you won't need to repeat yourself. They'll reply here.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": {
+          "ticket_id": "T-3005",
+          "queue": "Tier 2 Support",
+          "reason": "no_kb_coverage",
+          "explanation": "No knowledge-base article covers this request.",
+          "summary": "Marguerite D. (Team plan) wrote: \"Hello, we moved into our new office building last week and since then a few people on our team have been having trouble with Quillstack. I'm not sure whether it's something on our side (new network, new IT guy, everything is a bit chaotic) or on yours.\"",
+          "core_issue": "Problems since office move",
+          "customer": "Marguerite D. (Team plan, via web form)",
+          "details_provided": {},
+          "attempted_fixes": [],
+          "evidence_checked": [
+            "KB-204 \"Cancelling or downgrading your plan\" (keyword score 5.1)",
+            "KB-501 \"Webhook deliveries are failing\" (keyword score 4.2)",
+            "KB-202 \"Refunds for subscription charges\" (keyword score 3.7)",
+            "KB-301 \"Team member did not receive an invitation\" (keyword score 3.6)",
+            "KB-106 \"Storage and upload limits by plan\" (keyword score 2.2)"
+          ],
+          "unresolved_questions": [
+            "Is this supported, and which team owns it? No KB article covers: Problems since office move.",
+            "Should a KB article be written for this kind of request?"
+          ],
+          "suggested_next_step": "Answer from product knowledge or route to the owning team, and consider adding a KB article."
+        }
+      },
+      "baseline": {
+        "case_id": "H05",
+        "category": "missing_info",
+        "expected": "clarify",
+        "expected_reason": "low_information",
+        "predicted": "escalate",
+        "predicted_reason": "no_kb_coverage",
+        "outcome": "unnecessary_escalation",
+        "note": "",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 0,
+        "handoff_complete": true,
+        "escalation_source_match": null,
+        "ticket_id": "T-3005",
+        "system": "baseline",
+        "action": "escalate",
+        "reason": "no_kb_coverage",
+        "explanation": "No article scored above the threshold.",
+        "cited_sources": [],
+        "steps_offered": [],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "No match above threshold",
+          "=> escalate (no_kb_coverage)"
+        ],
+        "reply": "Hi Marguerite,\n\nThanks for the details. I've passed your request to our Tier 2 Support team with a summary of what you've told us and tried, so you won't need to repeat yourself. They'll reply here.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": {
+          "ticket_id": "T-3005",
+          "queue": "Tier 2 Support",
+          "reason": "no_kb_coverage",
+          "explanation": "No article scored above the threshold.",
+          "summary": "Marguerite D.: Problems since office move",
+          "core_issue": "Problems since office move",
+          "customer": "Marguerite D. (Team plan, via web form)",
+          "details_provided": {},
+          "attempted_fixes": [],
+          "evidence_checked": [
+            "KB-204 \"Cancelling or downgrading your plan\" (keyword score 5.1)"
+          ],
+          "unresolved_questions": [
+            "Is this supported, and which team owns it? No KB article covers: Problems since office move.",
+            "Should a KB article be written for this kind of request?"
+          ],
+          "suggested_next_step": "Answer from product knowledge or route to the owning team, and consider adding a KB article."
+        }
+      }
+    },
+    {
+      "case_id": "H06",
+      "category": "conflicting_guidance",
+      "expected": {
+        "decision": "escalate",
+        "reason": "conflicting_guidance",
+        "evidence_any": [
+          "KB-302",
+          "KB-303"
+        ],
+        "missing_info": [],
+        "attempted_steps": {},
+        "rationale": "KB-302 says only the workspace owner can remove members, while KB-303 says admins can invite and remove members; the customer is an admin asking whether they may remove someone themselves, so the two articles give opposite answers and a human must decide."
+      },
+      "agent": {
+        "case_id": "H06",
+        "category": "conflicting_guidance",
+        "expected": "escalate",
+        "expected_reason": "conflicting_guidance",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen escalate",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3006",
+        "system": "Lily",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "KB-303 answers this directly.",
+        "cited_sources": [
+          "KB-303"
+        ],
+        "steps_offered": [],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-303",
+          "4. Active incident for 'workspace'? no",
+          "5. Conflicting guidance that matters? no",
+          "6. Required details missing for KB-303? no",
+          "7. Steps already tried or impossible: none; remaining: none",
+          "8. Verified quote from KB-303? yes",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Jonas,\n\nThanks for getting in touch. From our guide \"Roles and permissions\" (KB-303):\n\n> Admins can invite and remove members and change workspace settings.\n\nIf that doesn't answer your question, reply here and we'll help.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      },
+      "baseline": {
+        "case_id": "H06",
+        "category": "conflicting_guidance",
+        "expected": "escalate",
+        "expected_reason": "conflicting_guidance",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen escalate",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3006",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-303 scored 8.0, above the threshold.",
+        "cited_sources": [
+          "KB-303"
+        ],
+        "steps_offered": [],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-303 (8.0) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Jonas,\n\nThanks for getting in touch. From our guide \"Roles and permissions\" (KB-303):\n\n> Admins can invite and remove members and change workspace settings.\n\nIf that doesn't answer your question, reply here and we'll help.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H07",
+      "category": "failed_fix",
+      "expected": {
+        "decision": "escalate",
+        "reason": "fixes_exhausted",
+        "evidence_any": [
+          "KB-102"
+        ],
+        "missing_info": [],
+        "attempted_steps": {
+          "KB-102": [
+            1,
+            2
+          ]
+        },
+        "rationale": "KB-102 offers only a backup code (step 1) or approval from a trusted device (step 2); the customer never saved backup codes and is not signed in on any other device, so both steps are impossible and the article says to escalate to Account Security rather than bypass verification."
+      },
+      "agent": {
+        "case_id": "H07",
+        "category": "failed_fix",
+        "expected": "escalate",
+        "expected_reason": "fixes_exhausted",
+        "predicted": "escalate",
+        "predicted_reason": "fixes_exhausted",
+        "outcome": "appropriate_escalation",
+        "note": "",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": false,
+        "attempts_found": [
+          2,
+          2
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": true,
+        "escalation_source_match": true,
+        "ticket_id": "T-3007",
+        "system": "Lily",
+        "action": "escalate",
+        "reason": "fixes_exhausted",
+        "explanation": "Every step in KB-102 has been tried or is not possible for this customer.",
+        "cited_sources": [
+          "KB-102"
+        ],
+        "steps_offered": [],
+        "missing_info": [],
+        "attempted": [
+          {
+            "article_id": "KB-102",
+            "step": 1,
+            "how": "customer_reported",
+            "quote": "When I turned on two-step verification I skipped the part with the backup codes (I know, I know...)."
+          },
+          {
+            "article_id": "KB-102",
+            "step": 2,
+            "how": "not_possible",
+            "quote": "I'm also not logged in on any other device - I only ever use Quillstack on this one laptop and I sign out every evening."
+          }
+        ],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-102",
+          "4. Active incident for 'accounts'? no",
+          "5. Conflicting guidance that matters? no",
+          "6. Required details missing for KB-102? no",
+          "7. Steps already tried or impossible: [1, 2]; remaining: none",
+          "=> escalate (fixes_exhausted)"
+        ],
+        "reply": "Hi Lukas,\n\nThanks for the details. I've passed your request to our Account Security team with a summary of what you've told us and tried, so you won't need to repeat yourself. They'll reply here.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": {
+          "ticket_id": "T-3007",
+          "queue": "Account Security",
+          "reason": "fixes_exhausted",
+          "explanation": "Every step in KB-102 has been tried or is not possible for this customer.",
+          "summary": "Lukas B. (Free plan) wrote: \"Hi, my phone went into the lake yesterday (kayaking, long story) and it's completely dead, won't even switch on. Every time I sign in, Quillstack asks for the 6-digit code from my authenticator app, which I obviously can't get any more.\"",
+          "core_issue": "locked out, phone dead, can't get my code (closest article: Signing in after losing your two-step verification device)",
+          "customer": "Lukas B. (Free plan, via email)",
+          "details_provided": {},
+          "attempted_fixes": [
+            "KB-102 step 1 \"Use a backup code\": customer says they tried it (\"When I turned on two-step verification I skipped the part with the backup codes (I know, I know...).\")",
+            "KB-102 step 2 \"Use a trusted device\": customer cannot do this (\"I'm also not logged in on any other device - I only ever use Quillstack on this one laptop and I sign out every evening.\")"
+          ],
+          "evidence_checked": [
+            "KB-102 \"Signing in after losing your two-step verification device\" (keyword score 30.2) (judged relevant)",
+            "KB-103 \"Suspicious sign-in activity or a compromised account\" (keyword score 7.6) (judged relevant)",
+            "KB-104 \"Desktop app is not syncing changes\" (keyword score 7.4)",
+            "KB-101 \"Resetting your password\" (keyword score 5.5)",
+            "KB-501 \"Webhook deliveries are failing\" (keyword score 4.6)",
+            "Quote from KB-102: \"Use this guide when a customer has two-step verification turned on and no longer has the phone or app that generates their codes.\"",
+            "Quote from KB-103: \"Signs of a compromised account include sign-in alerts from unfamiliar locations, a password or email change the customer did not make, unknown sessions, or files shared without permission.\"",
+            "Status page, component 'accounts': no active incident"
+          ],
+          "unresolved_questions": [
+            "Every step in KB-102 (Signing in after losing your two-step verification device) has failed or cannot be done by this customer. What is causing the problem, and what should happen next?"
+          ],
+          "suggested_next_step": "If the customer has no backup codes and no trusted device, do not try to bypass verification or change the account email. Escalate to Account Security, who verify identity before removing two-step verification."
+        }
+      },
+      "baseline": {
+        "case_id": "H07",
+        "category": "failed_fix",
+        "expected": "escalate",
+        "expected_reason": "fixes_exhausted",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen escalate",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": true,
+        "attempts_found": [
+          0,
+          2
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3007",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-102 scored 30.2, above the threshold.",
+        "cited_sources": [
+          "KB-102"
+        ],
+        "steps_offered": [
+          1,
+          2
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-102 (30.2) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Lukas,\n\nThanks for getting in touch. Here's what to do:\n\n1. Use a backup code. On the verification screen, choose \"Use a backup code\" and enter one of the ten codes saved when two-step verification was set up. Each code works once.\n2. Use a trusted device. If the customer is still signed in on another computer or tablet, they can approve the sign-in from Settings → Security → Trusted devices.\n\nThese steps come from our guide \"Signing in after losing your two-step verification device\" (KB-102). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H08",
+      "category": "failed_fix",
+      "expected": {
+        "decision": "escalate",
+        "reason": "fixes_exhausted",
+        "evidence_any": [
+          "KB-104"
+        ],
+        "missing_info": [],
+        "attempted_steps": {
+          "KB-104": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "rationale": "Over the thread the Windows user has done every KB-104 step: the cache reset before writing (3), the update and sign-out/sign-in the agent suggested, reported as failing (1, 2), and a reinstall on their own (4). INC-2207 had not started on 2026-10-29, so this is a fixes-exhausted escalation to Technical Support, not an incident case."
+      },
+      "agent": {
+        "case_id": "H08",
+        "category": "failed_fix",
+        "expected": "escalate",
+        "expected_reason": "fixes_exhausted",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen escalate",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": true,
+        "attempts_found": [
+          3,
+          4
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3008",
+        "system": "Lily",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "KB-104 covers this and 1 step(s) have not been tried yet.",
+        "cited_sources": [
+          "KB-104"
+        ],
+        "steps_offered": [
+          4
+        ],
+        "missing_info": [],
+        "attempted": [
+          {
+            "article_id": "KB-104",
+            "step": 1,
+            "how": "suggested_earlier",
+            "quote": "ok, updated (it now says I'm on the latest version) and logged out and in again."
+          },
+          {
+            "article_id": "KB-104",
+            "step": 2,
+            "how": "suggested_earlier",
+            "quote": "ok, updated (it now says I'm on the latest version) and logged out and in again."
+          },
+          {
+            "article_id": "KB-104",
+            "step": 3,
+            "how": "customer_reported",
+            "quote": "Last night I already cleared the local cache under the advanced settings (it re-downloaded everything, took forever) but it's still stuck."
+          }
+        ],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-104",
+          "4. Active incident for 'sync'? no",
+          "5. Conflicting guidance that matters? no",
+          "6. Required details missing for KB-104? no",
+          "7. Steps already tried or impossible: [1, 2, 3]; remaining: [4]",
+          "8. Verified quote from KB-104? yes",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Aiyana,\n\nThanks for already trying these: update to the latest version, sign out and back in, reset the local cache. The next steps are:\n\n1. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      },
+      "baseline": {
+        "case_id": "H08",
+        "category": "failed_fix",
+        "expected": "escalate",
+        "expected_reason": "fixes_exhausted",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen escalate",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": true,
+        "attempts_found": [
+          0,
+          4
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3008",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-104 scored 32.5, above the threshold.",
+        "cited_sources": [
+          "KB-104"
+        ],
+        "steps_offered": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-104 (32.5) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Aiyana,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Choose Help → Check for updates and restart the app after installing.\n2. Sign out and back in. This refreshes the sync session without touching local files.\n3. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n4. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H09",
+      "category": "policy_escalation",
+      "expected": {
+        "decision": "escalate",
+        "reason": "policy_escalation",
+        "evidence_any": [
+          "KB-103"
+        ],
+        "missing_info": [],
+        "attempted_steps": {
+          "KB-103": [
+            1
+          ]
+        },
+        "rationale": "A sign-in alert from a country the customer has never visited and folders shared with an unknown address are compromise signs listed in KB-103, which says always escalate to Trust & Safety even after a password change, so the agent should not walk the customer through unsharing files."
+      },
+      "agent": {
+        "case_id": "H09",
+        "category": "policy_escalation",
+        "expected": "escalate",
+        "expected_reason": "policy_escalation",
+        "predicted": "escalate",
+        "predicted_reason": "policy_escalation",
+        "outcome": "appropriate_escalation",
+        "note": "",
+        "decision_match": true,
+        "reason_match": true,
+        "repeated_failed_fix": false,
+        "attempts_found": [
+          1,
+          1
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": true,
+        "escalation_source_match": true,
+        "ticket_id": "T-3009",
+        "system": "Lily",
+        "action": "escalate",
+        "reason": "policy_escalation",
+        "explanation": "KB-103 says requests like this always go to Trust & Safety.",
+        "cited_sources": [
+          "KB-103"
+        ],
+        "steps_offered": [],
+        "missing_info": [],
+        "attempted": [
+          {
+            "article_id": "KB-103",
+            "step": 1,
+            "how": "customer_reported",
+            "quote": "I'm in Toronto and have never been to Portugal, so I changed my password straight away just in case."
+          }
+        ],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? yes, KB-103",
+          "=> escalate (policy_escalation)"
+        ],
+        "reply": "Hi Devon,\n\nThanks for the details. I've passed your request to our Trust & Safety team with a summary of what you've told us and tried, so you won't need to repeat yourself. They'll reply here.\n\nWhile you wait, we recommend:\n\n1. Sign out of all sessions. Settings → Security → Sessions → \"Sign out everywhere\" ends every active session.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": {
+          "ticket_id": "T-3009",
+          "queue": "Trust & Safety",
+          "reason": "policy_escalation",
+          "explanation": "KB-103 says requests like this always go to Trust & Safety.",
+          "summary": "Devon K. (Business plan) wrote: \"Hi Quillstack team, I woke up to an email about a new sign-in to my account from Lisbon, Portugal. I'm in Toronto and have never been to Portugal, so I changed my password straight away just in case.\"",
+          "core_issue": "How do I unshare folders? (closest article: Suspicious sign-in activity or a compromised account)",
+          "customer": "Devon K. (Business plan, via email)",
+          "details_provided": {
+            "account_email": "r.vance@quickdocs.example"
+          },
+          "attempted_fixes": [
+            "KB-103 step 1 \"Change the password now\": customer says they tried it (\"I'm in Toronto and have never been to Portugal, so I changed my password straight away just in case.\")"
+          ],
+          "evidence_checked": [
+            "KB-103 \"Suspicious sign-in activity or a compromised account\" (keyword score 12.8) (judged relevant)",
+            "KB-101 \"Resetting your password\" (keyword score 12.1) (judged relevant)",
+            "KB-201 \"Updating your payment method\" (keyword score 10.2) (judged relevant)",
+            "KB-301 \"Team member did not receive an invitation\" (keyword score 8.5)",
+            "KB-204 \"Cancelling or downgrading your plan\" (keyword score 5.4)",
+            "Quote from KB-103: \"Signs of a compromised account include sign-in alerts from unfamiliar locations, a password or email change the customer did not make, unknown sessions, or files shared without permission.\"",
+            "Quote from KB-101: \"Use this guide when a customer cannot sign in because they forgot their password or the reset email does not arrive.\"",
+            "Quote from KB-201: \"Workspace owners can change the card used for the subscription at any time.\"",
+            "Status page, component 'security': no active incident"
+          ],
+          "unresolved_questions": [
+            "What does Trust & Safety need to verify or do? KB-103 says: \"Always escalate suspected compromise to Trust & Safety, even if the customer has already changed their password.\""
+          ],
+          "suggested_next_step": "Always escalate suspected compromise to Trust & Safety, even if the customer has already changed their password. Do not troubleshoot, restore files, or confirm account details in the reply."
+        }
+      },
+      "baseline": {
+        "case_id": "H09",
+        "category": "policy_escalation",
+        "expected": "escalate",
+        "expected_reason": "policy_escalation",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen escalate",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": true,
+        "attempts_found": [
+          0,
+          1
+        ],
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3009",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-103 scored 12.8, above the threshold.",
+        "cited_sources": [
+          "KB-103"
+        ],
+        "steps_offered": [
+          1,
+          2
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-103 (12.8) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Devon,\n\nThanks for getting in touch. Here's what to do:\n\n1. Change the password now. If the customer can still sign in, they should change their password from Settings → Security.\n2. Sign out of all sessions. Settings → Security → Sessions → \"Sign out everywhere\" ends every active session.\n\nThese steps come from our guide \"Suspicious sign-in activity or a compromised account\" (KB-103). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    },
+    {
+      "case_id": "H10",
+      "category": "no_kb_coverage",
+      "expected": {
+        "decision": "escalate",
+        "reason": "no_kb_coverage",
+        "evidence_any": [],
+        "missing_info": [],
+        "attempted_steps": {},
+        "rationale": "No article covers adding a VAT number or new address to invoices or re-issuing past invoices; the billing articles (KB-201 to KB-204) only cover payment cards, refunds, charge dates and currencies, and plan changes, so this needs a human."
+      },
+      "agent": {
+        "case_id": "H10",
+        "category": "no_kb_coverage",
+        "expected": "escalate",
+        "expected_reason": "no_kb_coverage",
+        "predicted": "clarify",
+        "predicted_reason": "missing_info",
+        "outcome": "missed_escalation",
+        "note": "",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 1,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3010",
+        "system": "Lily",
+        "action": "clarify",
+        "reason": "missing_info",
+        "explanation": "KB-202 needs invoice_number before troubleshooting.",
+        "cited_sources": [
+          "KB-202"
+        ],
+        "steps_offered": [],
+        "missing_info": [
+          "invoice_number"
+        ],
+        "attempted": [
+          {
+            "article_id": "KB-202",
+            "step": 1,
+            "how": "customer_reported",
+            "quote": "Our auditors have flagged that our Quillstack invoices don't show our VAT registration number, and they still have our old registered address from before we moved offices across Bristol in June."
+          }
+        ],
+        "trace": [
+          "0. Analysis error? no",
+          "1. Best article requires escalation? no",
+          "2. Too vague to triage? no",
+          "3. Relevant article found? KB-202",
+          "4. Active incident for 'billing'? no",
+          "5. Conflicting guidance that matters? no",
+          "6. Required details missing for KB-202? invoice_number",
+          "=> clarify (missing_info)"
+        ],
+        "reply": "Hi Sofia,\n\nThanks for getting in touch. So I can point you to the right fix, could you tell me:\n\n- the invoice number (it looks like INV-123456 and is listed under Settings → Billing → Invoices)\n\nAs soon as I have that, I'll take it from there.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      },
+      "baseline": {
+        "case_id": "H10",
+        "category": "no_kb_coverage",
+        "expected": "escalate",
+        "expected_reason": "no_kb_coverage",
+        "predicted": "resolve",
+        "predicted_reason": "supported_fix",
+        "outcome": "incorrect_resolution",
+        "note": "should have chosen escalate",
+        "decision_match": false,
+        "reason_match": false,
+        "repeated_failed_fix": false,
+        "attempts_found": null,
+        "unlabelled_attempts": 0,
+        "handoff_complete": null,
+        "escalation_source_match": null,
+        "ticket_id": "T-3010",
+        "system": "baseline",
+        "action": "resolve",
+        "reason": "supported_fix",
+        "explanation": "Top match KB-202 scored 9.3, above the threshold.",
+        "cited_sources": [
+          "KB-202"
+        ],
+        "steps_offered": [
+          1,
+          2,
+          3
+        ],
+        "missing_info": [],
+        "attempted": [],
+        "trace": [
+          "Top match KB-202 (9.3) >= 7.5",
+          "=> resolve (supported_fix)"
+        ],
+        "reply": "Hi Sofia,\n\nThanks for getting in touch. Here's what to do:\n\n1. Confirm the invoice number. Invoice numbers look like INV-123456 and are listed under Settings → Billing → Invoices.\n2. Request the refund. Next to the invoice, choose \"Request refund\". Requests inside the refund window are approved automatically.\n3. Allow 5–10 business days. The refund appears on the statement within 5–10 business days, depending on the bank.\n\nThese steps come from our guide \"Refunds for subscription charges\" (KB-202). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "handoff": null
+      }
+    }
+  ]
+}

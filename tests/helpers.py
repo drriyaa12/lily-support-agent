@@ -9,7 +9,7 @@ _KB = None
 
 def make_ticket(*messages, subject="Help", created_at="2026-10-28T10:00:00Z", plan="Team", name="Test C."):
     """Build a Ticket. Each message is a string (from the customer) or a (role, text) tuple."""
-    from triage.models import Ticket
+    from lily.models import Ticket
 
     msgs = []
     for m in messages:
@@ -29,13 +29,13 @@ def real_kb():
     """The repository's knowledge base, loaded once."""
     global _KB
     if _KB is None:
-        from triage.kb import load_kb
+        from lily.kb import load_kb
         _KB = load_kb(DATA / "kb")
     return _KB
 
 
 def make_article(aid="KB-1", steps=4, required=(), escalate="when_steps_fail", component="sync"):
-    from triage.kb import parse_article
+    from lily.kb import parse_article
 
     md = (f"---\nid: {aid}\ntitle: Article {aid}\ncomponent: {component}\nescalate: {escalate}\n"
           f"required_info: [{', '.join(required)}]\nqueue: Technical Support\n---\nIntro sentence.\n\n")
@@ -46,8 +46,8 @@ def make_article(aid="KB-1", steps=4, required=(), escalate="when_steps_fail", c
 
 def make_investigation(relevant=(), provided=None, attempted=(), conflicts=(), incidents=(),
                        low_information=False, error=None, evidence=None):
-    from triage.investigator import Investigation
-    from triage.models import Analysis, Evidence
+    from lily.investigator import Investigation
+    from lily.models import Analysis, Evidence
 
     relevant = list(relevant)
     if evidence is None:

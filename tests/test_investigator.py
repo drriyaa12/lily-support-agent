@@ -2,11 +2,11 @@ import unittest
 from datetime import datetime, timezone
 
 from tests.helpers import make_ticket, real_kb
-from triage.investigator import Investigator, fact_conflicts
-from triage.kb import parse_article
-from triage.models import Analysis, AttemptedStep, Evidence
-from triage.retrieval import BM25Index
-from triage.status import Incident
+from lily.investigator import Investigator, fact_conflicts
+from lily.kb import parse_article
+from lily.models import Analysis, AttemptedStep, Evidence
+from lily.retrieval import BM25Index
+from lily.status import Incident
 
 
 class FactConflictTests(unittest.TestCase):
@@ -101,8 +101,39 @@ class InvestigatorGuardrailTests(unittest.TestCase):
         ])
         self.assertEqual([a.step for a in inv.attempted], [2])
 
+    def test_duplicate_relevant_ids_are_logged_as_duplicates(self):
+        inv = self.investigate(relevant_ids=["KB-104", "KB-104"])
+        self.assertEqual([a.id for a in inv.relevant], ["KB-104"])
+        self.assertFalse(any("not among the retrieved" in line for line in inv.log))
+
     def test_attaches_active_incident_for_best_article_component(self):
         self.assertEqual([i.id for i in self.investigate().incidents], ["INC-9"])
+
+
+class ConflictScopeTests(unittest.TestCase):
+    """Review findings: quoted policy limits and plan scope."""
+
+    def setUp(self):
+        self.kb = real_kb()
+
+    def test_quoted_policy_limit_is_not_the_customers_value(self):
+        text = "Your FAQ says refunds are possible within 30 days. I was charged 10 days ago, can I get a refund?"
+        self.assertFalse(fact_conflicts([self.kb["KB-202"], self.kb["KB-203"]], text)[0].matters)
+
+    def test_paid_plan_limits_do_not_matter_on_the_free_plan(self):
+        found = fact_conflicts([self.kb["KB-105"], self.kb["KB-106"]], "Uploading a 180 MB video fails.", plan="Free")
+        self.assertFalse(found[0].matters)
+
+
+class DetailPrecedenceTests(unittest.TestCase):
+    def test_analyzer_details_take_precedence_over_patterns(self):
+        kb = real_kb()
+        ticket = make_ticket("I sync from a Mac (macOS 14) and a Windows 11 PC. The Windows 11 PC is stuck syncing.",
+                             subject="Desktop sync stuck", created_at="2026-10-29T09:30:00Z")
+        analysis = Analysis(source="fixed", summary="s", core_issue="c", relevant_ids=["KB-104"],
+                            provided_info={"os": "Windows 11"})
+        inv = Investigator(kb, BM25Index(kb.values()), [], FixedAnalyzer(analysis)).investigate(ticket)
+        self.assertEqual(inv.provided_info["os"], "Windows 11")
 
 
 if __name__ == "__main__":

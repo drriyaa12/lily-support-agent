@@ -1,8 +1,8 @@
 import unittest
 
 from tests.helpers import DATA, real_kb
-from triage.fields import FIELDS
-from triage.kb import parse_article
+from lily.fields import FIELDS
+from lily.kb import parse_article
 
 SAMPLE = """---
 id: KB-900
