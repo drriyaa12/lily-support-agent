@@ -1,0 +1,576 @@
+[
+  {
+    "case_id": "C01",
+    "category": "routine",
+    "ticket": {
+      "id": "T-2001",
+      "created_at": "2026-10-21T09:14:00Z",
+      "channel": "chat",
+      "customer": {"name": "Priya N.", "plan": "Team"},
+      "subject": "Forgot my password",
+      "messages": [
+        {"role": "customer", "text": "Hi, I forgot my password and can't get into Quillstack. My account email is priya.n@northfield-studio.example. How do I reset it?"}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-101"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "Self-serve password reset is fully covered by KB-101 and nothing has been tried yet."
+    }
+  },
+  {
+    "case_id": "C02",
+    "category": "routine",
+    "ticket": {
+      "id": "T-2002",
+      "created_at": "2026-10-22T14:03:00Z",
+      "channel": "email",
+      "customer": {"name": "Marco R.", "plan": "Business"},
+      "subject": "Card expired, payment failed",
+      "messages": [
+        {"role": "customer", "text": "Our company card expired last month and now there's a banner saying the payment failed. I'm the workspace owner. How do I put a new card on file so we don't lose access?"}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-201"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "The owner can replace the card and retry the payment by following KB-201."
+    }
+  },
+  {
+    "case_id": "C03",
+    "category": "routine",
+    "ticket": {
+      "id": "T-2003",
+      "created_at": "2026-10-23T08:40:00Z",
+      "channel": "web form",
+      "customer": {"name": "Aiko T.", "plan": "Business"},
+      "subject": "Moving from Business to Team",
+      "messages": [
+        {"role": "customer", "text": "We don't use the Business features anymore. How can I move our workspace down to the Team plan, and when would the change take effect?"}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-204"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-204 explains how to downgrade and when the change takes effect."
+    }
+  },
+  {
+    "case_id": "C04",
+    "category": "routine",
+    "ticket": {
+      "id": "T-2004",
+      "created_at": "2026-10-24T11:25:00Z",
+      "channel": "email",
+      "customer": {"name": "Tomás G.", "plan": "Team"},
+      "subject": "Need a full copy of our workspace",
+      "messages": [
+        {"role": "customer", "text": "Before our annual audit I need a complete copy of all our documents and files. Is there a way to export the whole workspace in one go?"}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-401"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "Workspace export is self-serve and covered by KB-401."
+    }
+  },
+  {
+    "case_id": "C05",
+    "category": "routine",
+    "ticket": {
+      "id": "T-2005",
+      "created_at": "2026-10-26T16:10:00Z",
+      "channel": "chat",
+      "customer": {"name": "Dev P.", "plan": "Team"},
+      "subject": "New hire never got the invite",
+      "messages": [
+        {"role": "customer", "text": "I invited our new designer (lena.k@harborline.example) to the workspace two days ago, but she says the invitation never arrived. Can you help?"}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-301"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-301 covers missing invitations and none of its steps have been tried."
+    }
+  },
+  {
+    "case_id": "C06",
+    "category": "routine",
+    "ticket": {
+      "id": "T-2006",
+      "created_at": "2026-10-28T10:05:00Z",
+      "channel": "chat",
+      "customer": {"name": "Sofia L.", "plan": "Team"},
+      "subject": "Changes not showing up for teammates",
+      "messages": [
+        {"role": "customer", "text": "Since yesterday, edits I make in the desktop app on my MacBook (macOS 15) aren't showing up for my teammates. The app just says \"Syncing…\" forever."}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-104"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-104 applies, the operating system is given, and no sync incident is active on 2026-10-28."
+    }
+  },
+  {
+    "case_id": "C07",
+    "category": "routine",
+    "ticket": {
+      "id": "T-2007",
+      "created_at": "2026-10-27T13:45:00Z",
+      "channel": "email",
+      "customer": {"name": "Kwame A.", "plan": "Business"},
+      "subject": "Webhook stopped delivering",
+      "messages": [
+        {"role": "customer", "text": "Our webhook wh_2k9d7x1p stopped receiving events yesterday afternoon. The dashboard shows the deliveries as failed. What should we check?"}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-501"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-501 applies, the webhook ID is given, and the webhook incident INC-2191 was resolved a week earlier, so it is not relevant."
+    }
+  },
+  {
+    "case_id": "C08",
+    "category": "missing_info",
+    "ticket": {
+      "id": "T-2008",
+      "created_at": "2026-10-29T09:30:00Z",
+      "channel": "chat",
+      "customer": {"name": "Hana S.", "plan": "Team"},
+      "subject": "Desktop app stuck syncing",
+      "messages": [
+        {"role": "customer", "text": "My desktop app has been stuck on \"Syncing…\" all morning and my edits don't reach the rest of the team. What can I do?"}
+      ]
+    },
+    "expected": {
+      "decision": "clarify",
+      "reason": "missing_info",
+      "evidence_any": ["KB-104"],
+      "missing_info": ["os"],
+      "attempted_steps": {},
+      "rationale": "KB-104 says to confirm the operating system first, and the ticket does not mention it."
+    }
+  },
+  {
+    "case_id": "C09",
+    "category": "missing_info",
+    "ticket": {
+      "id": "T-2009",
+      "created_at": "2026-10-30T15:00:00Z",
+      "channel": "email",
+      "customer": {"name": "Owen M.", "plan": "Team"},
+      "subject": "Refund please",
+      "messages": [
+        {"role": "customer", "text": "We were charged for another month even though we meant to cancel. Could we get that charge refunded?"}
+      ]
+    },
+    "expected": {
+      "decision": "clarify",
+      "reason": "missing_info",
+      "evidence_any": ["KB-202"],
+      "missing_info": ["invoice_number"],
+      "attempted_steps": {},
+      "rationale": "Refunds need the invoice number (KB-202), which also shows the charge date."
+    }
+  },
+  {
+    "case_id": "C10",
+    "category": "missing_info",
+    "ticket": {
+      "id": "T-2010",
+      "created_at": "2026-10-30T07:50:00Z",
+      "channel": "email",
+      "customer": {"name": "Fatima Z.", "plan": "Business"},
+      "subject": "Webhook errors",
+      "messages": [
+        {"role": "customer", "text": "One of our webhooks has been failing since this morning and our integration is falling behind. How do we fix it?"}
+      ]
+    },
+    "expected": {
+      "decision": "clarify",
+      "reason": "missing_info",
+      "evidence_any": ["KB-501"],
+      "missing_info": ["webhook_id"],
+      "attempted_steps": {},
+      "rationale": "KB-501 says to ask for the webhook ID before troubleshooting."
+    }
+  },
+  {
+    "case_id": "C11",
+    "category": "missing_info",
+    "ticket": {
+      "id": "T-2011",
+      "created_at": "2026-10-31T12:20:00Z",
+      "channel": "web form",
+      "customer": {"name": "Leo F.", "plan": "Team"},
+      "subject": "App won't open",
+      "messages": [
+        {"role": "customer", "text": "The Quillstack desktop app closes immediately every time I open it. It was working fine last week."}
+      ]
+    },
+    "expected": {
+      "decision": "clarify",
+      "reason": "missing_info",
+      "evidence_any": ["KB-107"],
+      "missing_info": ["os", "app_version"],
+      "attempted_steps": {},
+      "rationale": "KB-107 says crash fixes depend on the operating system and app version, and neither is given."
+    }
+  },
+  {
+    "case_id": "C12",
+    "category": "missing_info",
+    "ticket": {
+      "id": "T-2012",
+      "created_at": "2026-11-02T08:05:00Z",
+      "channel": "chat",
+      "customer": {"name": "Mei C.", "plan": "Team"},
+      "subject": "Urgent!!",
+      "messages": [
+        {"role": "customer", "text": "Nothing works since the update. Please fix this asap."}
+      ]
+    },
+    "expected": {
+      "decision": "clarify",
+      "reason": "low_information",
+      "evidence_any": [],
+      "missing_info": ["issue_details"],
+      "attempted_steps": {},
+      "rationale": "The ticket does not say which part of the product is affected, so no article can be chosen yet."
+    }
+  },
+  {
+    "case_id": "C13",
+    "category": "conflicting_guidance",
+    "ticket": {
+      "id": "T-2013",
+      "created_at": "2026-10-25T10:15:00Z",
+      "channel": "email",
+      "customer": {"name": "Rafael D.", "plan": "Team"},
+      "subject": "Large video won't upload",
+      "messages": [
+        {"role": "customer", "text": "We're on the Team plan. Uploading a 180 MB video fails every time in the browser. Is there a size limit, and can we upload this file at all?"}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "conflicting_guidance",
+      "evidence_any": ["KB-105", "KB-106"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-105 says paid plans allow 250 MB and KB-106 says 100 MB. A 180 MB file falls between the two, so the answer depends on which article is right."
+    }
+  },
+  {
+    "case_id": "C14",
+    "category": "conflicting_guidance",
+    "ticket": {
+      "id": "T-2014",
+      "created_at": "2026-10-27T09:10:00Z",
+      "channel": "chat",
+      "customer": {"name": "Clara H.", "plan": "Business"},
+      "subject": "Can't remove a former employee",
+      "messages": [
+        {"role": "customer", "text": "I'm an admin in our workspace and I need to remove someone who left the company, but I can't find a way to do it. Are admins allowed to remove members?"}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "conflicting_guidance",
+      "evidence_any": ["KB-302", "KB-303"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-302 says only owners can remove members and KB-303 says admins can. The customer is an admin, so the disagreement decides the answer."
+    }
+  },
+  {
+    "case_id": "C15",
+    "category": "conflicting_guidance",
+    "ticket": {
+      "id": "T-2015",
+      "created_at": "2026-10-29T17:30:00Z",
+      "channel": "email",
+      "customer": {"name": "Noah B.", "plan": "Business"},
+      "subject": "Refund for annual plan",
+      "messages": [
+        {"role": "customer", "text": "We upgraded to the annual Business plan 20 days ago, but it turns out we don't need it. Can we get a refund? The invoice is INV-204518."}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "conflicting_guidance",
+      "evidence_any": ["KB-202", "KB-203"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-202 allows refunds within 14 days and KB-203 within 30 days. A charge 20 days ago is inside one window and outside the other."
+    }
+  },
+  {
+    "case_id": "C16",
+    "category": "conflicting_guidance",
+    "ticket": {
+      "id": "T-2016",
+      "created_at": "2026-10-30T10:45:00Z",
+      "channel": "chat",
+      "customer": {"name": "Zara Q.", "plan": "Team"},
+      "subject": "Charged by mistake",
+      "messages": [
+        {"role": "customer", "text": "I accidentally upgraded our workspace 3 days ago and was charged for it. Can I get a refund? The invoice number is INV-337120."}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-202"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-202 (14 days) and KB-203 (30 days) disagree, but a charge 3 days ago is refundable under both, so the disagreement does not change the answer."
+    }
+  },
+  {
+    "case_id": "C17",
+    "category": "failed_fix",
+    "ticket": {
+      "id": "T-2017",
+      "created_at": "2026-10-30T13:00:00Z",
+      "channel": "email",
+      "customer": {"name": "Ibrahim S.", "plan": "Team"},
+      "subject": "Sync still broken after everything",
+      "messages": [
+        {"role": "customer", "text": "Quillstack on my Windows 11 laptop hasn't synced for two days. I already updated to the latest version, signed out and back in, reset the local cache and even reinstalled the app. Still nothing syncs."}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "fixes_exhausted",
+      "evidence_any": ["KB-104"],
+      "missing_info": [],
+      "attempted_steps": {"KB-104": [1, 2, 3, 4]},
+      "rationale": "All four KB-104 steps have been tried and sync still fails."
+    }
+  },
+  {
+    "case_id": "C18",
+    "category": "failed_fix",
+    "ticket": {
+      "id": "T-2018",
+      "created_at": "2026-10-22T11:35:00Z",
+      "channel": "chat",
+      "customer": {"name": "Arjun V.", "plan": "Business"},
+      "subject": "Desktop not syncing",
+      "messages": [
+        {"role": "customer", "text": "Files I edit on my Mac (macOS 14) aren't syncing to the web app. I've updated the app and signed out and back in, but it didn't help."}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "supported_fix",
+      "evidence_any": ["KB-104"],
+      "missing_info": [],
+      "attempted_steps": {"KB-104": [1, 2]},
+      "rationale": "Steps 1 and 2 failed, but steps 3 and 4 of KB-104 have not been tried yet."
+    }
+  },
+  {
+    "case_id": "C19",
+    "category": "failed_fix",
+    "ticket": {
+      "id": "T-2019",
+      "created_at": "2026-10-24T10:00:00Z",
+      "channel": "email",
+      "customer": {"name": "Yuki T.", "plan": "Team"},
+      "subject": "Password reset email never arrives",
+      "messages": [
+        {"role": "customer", "text": "I asked for a password reset an hour ago and never got the email. My account is yuki.t@lanternworks.example."},
+        {"role": "agent", "text": "Thanks, Yuki! Please check your spam folder and any company mail filters for a message from no-reply@quillstack.example, then request a new link. Only the newest link works, and it expires after 30 minutes."},
+        {"role": "customer", "text": "I checked spam and requested two more links. Still nothing. I also tried a private window in case it was my browser."}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "fixes_exhausted",
+      "evidence_any": ["KB-101"],
+      "missing_info": [],
+      "attempted_steps": {"KB-101": [1, 2, 3, 4]},
+      "rationale": "Every KB-101 step was suggested or tried and no email arrives. KB-101 says the address may be suppressed, which only staff can clear."
+    }
+  },
+  {
+    "case_id": "C20",
+    "category": "failed_fix",
+    "ticket": {
+      "id": "T-2020",
+      "created_at": "2026-10-26T07:20:00Z",
+      "channel": "chat",
+      "customer": {"name": "Daniel O.", "plan": "Team"},
+      "subject": "Lost my phone, can't log in",
+      "messages": [
+        {"role": "customer", "text": "I lost my phone over the weekend and Quillstack keeps asking for my two-step verification code. I don't have my backup codes and I'm not signed in on any other device. My account email is daniel.o@fieldnote.example."}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "fixes_exhausted",
+      "evidence_any": ["KB-102"],
+      "missing_info": [],
+      "attempted_steps": {"KB-102": [1, 2]},
+      "rationale": "Neither KB-102 step is possible (no backup codes, no trusted device), so Account Security must verify identity."
+    }
+  },
+  {
+    "case_id": "C21",
+    "category": "failed_fix",
+    "ticket": {
+      "id": "T-2021",
+      "created_at": "2026-10-31T16:40:00Z",
+      "channel": "email",
+      "customer": {"name": "Amara N.", "plan": "Business"},
+      "subject": "Webhook still failing after troubleshooting",
+      "messages": [
+        {"role": "customer", "text": "Webhook wh_8f3k2m9q has been failing since Tuesday. I checked that our endpoint returns a 200 in under a second, rotated and updated the signing secret, and re-enabled the webhook twice. Deliveries still fail."}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "fixes_exhausted",
+      "evidence_any": ["KB-501"],
+      "missing_info": [],
+      "attempted_steps": {"KB-501": [1, 2, 3]},
+      "rationale": "All three KB-501 steps have been tried and deliveries still fail."
+    }
+  },
+  {
+    "case_id": "C22",
+    "category": "policy_escalation",
+    "ticket": {
+      "id": "T-2022",
+      "created_at": "2026-11-01T22:15:00Z",
+      "channel": "email",
+      "customer": {"name": "Nina J.", "plan": "Team"},
+      "subject": "Someone logged into my account",
+      "messages": [
+        {"role": "customer", "text": "I got an email about a sign-in from a country I've never been to, and some of my files were shared with people I don't know. I've already changed my password. What else should I do?"}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "policy_escalation",
+      "evidence_any": ["KB-103"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-103 says suspected compromise is always escalated to Trust & Safety."
+    }
+  },
+  {
+    "case_id": "C23",
+    "category": "policy_escalation",
+    "ticket": {
+      "id": "T-2023",
+      "created_at": "2026-11-02T13:05:00Z",
+      "channel": "email",
+      "customer": {"name": "Elif D.", "plan": "Free"},
+      "subject": "Delete my data",
+      "messages": [
+        {"role": "customer", "text": "Please delete my account and all the personal data you hold about me, as required under data protection law. My email is elif.d@quietmail.example."}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "policy_escalation",
+      "evidence_any": ["KB-402"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "KB-402 says deletion and personal-data requests always go to the Privacy team."
+    }
+  },
+  {
+    "case_id": "C24",
+    "category": "no_kb_coverage",
+    "ticket": {
+      "id": "T-2024",
+      "created_at": "2026-11-03T09:45:00Z",
+      "channel": "web form",
+      "customer": {"name": "Lucas P.", "plan": "Business"},
+      "subject": "SAML single sign-on?",
+      "messages": [
+        {"role": "customer", "text": "Our IT team wants to roll Quillstack out to 300 people, but only if we can enforce SAML single sign-on through our identity provider. Is that supported, and how do we set it up?"}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "no_kb_coverage",
+      "evidence_any": [],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "No article covers single sign-on, so the agent must not guess."
+    }
+  },
+  {
+    "case_id": "C25",
+    "category": "no_kb_coverage",
+    "ticket": {
+      "id": "T-2025",
+      "created_at": "2026-11-03T15:30:00Z",
+      "channel": "email",
+      "customer": {"name": "Ingrid V.", "plan": "Business"},
+      "subject": "Wrong VAT number on invoice",
+      "messages": [
+        {"role": "customer", "text": "Our latest invoice INV-551032 shows an old VAT number for our company. Our finance team needs a corrected invoice re-issued for that charge. Can you do that?"}
+      ]
+    },
+    "expected": {
+      "decision": "escalate",
+      "reason": "no_kb_coverage",
+      "evidence_any": [],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "Billing articles mention invoices, but none covers correcting or re-issuing one."
+    }
+  },
+  {
+    "case_id": "C26",
+    "category": "known_incident",
+    "ticket": {
+      "id": "T-2026",
+      "created_at": "2026-11-04T15:20:00Z",
+      "channel": "chat",
+      "customer": {"name": "Ravi K.", "plan": "Team"},
+      "subject": "Changes not syncing today",
+      "messages": [
+        {"role": "customer", "text": "Since this morning my changes in the desktop app take ages to show up for my colleagues. I'm on Windows 11. Is something wrong on your side?"}
+      ]
+    },
+    "expected": {
+      "decision": "resolve",
+      "reason": "known_incident",
+      "evidence_any": ["INC-2207"],
+      "missing_info": [],
+      "attempted_steps": {},
+      "rationale": "Incident INC-2207 (delayed desktop sync) is active when the ticket arrives. The reply should point to the incident, not send troubleshooting steps."
+    }
+  }
+]

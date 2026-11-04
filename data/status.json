@@ -1,0 +1,23 @@
+{
+  "source": "Quillstack status page (fictional)",
+  "incidents": [
+    {
+      "id": "INC-2207",
+      "component": "sync",
+      "title": "Delayed sync for desktop apps",
+      "status": "investigating",
+      "started_at": "2026-11-04T08:10:00Z",
+      "resolved_at": null,
+      "public_message": "Some desktop apps are syncing changes with a delay of up to two hours. Files are not lost, and changes will appear once sync catches up. We are working on a fix."
+    },
+    {
+      "id": "INC-2191",
+      "component": "integrations",
+      "title": "Webhook deliveries delayed",
+      "status": "resolved",
+      "started_at": "2026-10-20T09:00:00Z",
+      "resolved_at": "2026-10-20T13:30:00Z",
+      "public_message": "Webhook events were delayed by up to 40 minutes. All delayed events have been delivered."
+    }
+  ]
+}

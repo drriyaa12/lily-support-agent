@@ -1,0 +1,3 @@
+# Only needed for --analyzer claude (Python 3.10+).
+# The offline agent, the tests and the offline evaluation use the Python standard library only.
+anthropic>=2.4,<3
