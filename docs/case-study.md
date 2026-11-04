@@ -73,8 +73,8 @@ it can't tell whether a fix would have worked.
 The development score is optimistic: the thresholds were tuned on those
 tickets, and the same assistant wrote both the tickets and Lily. The held-out
 score is a better guide, but a preliminary one. Ten AI-written tickets is a
-small sample, their writer used the same labelling guide that Lily's rules
-follow, and agreement between AI labellers doesn't replace an independent
+small sample, their writer used the same labelling guide that Lily's decision
+rules follow, and agreement between AI labellers doesn't replace an independent
 check by people.
 
 Lily got five held-out tickets wrong in all: four with the wrong decision and
