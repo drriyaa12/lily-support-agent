@@ -60,14 +60,16 @@ def _conflict_matters(fact: str, value_a: str, value_b: str, text: str, plan: st
     key_tokens = set(tokenize(fact.replace("_", " ")))
     if len(key_tokens & set(tokenize(text))) < min(2, len(key_tokens)):
         return False, f"The ticket is not about {label}."
-    if fact.endswith("_paid") and plan.strip().lower() == "free":
+    asks_about_paid = bool({"upgrad", "paid", "team", "business"} & set(tokenize(text)))
+    if fact.endswith("_paid") and plan.strip().lower() == "free" and not asks_about_paid:
         return False, "The customer is on the Free plan, and the conflicting values only apply to paid plans."
     unit = next((part for part in fact.split("_") if part in UNIT_PATTERNS), None)
     a, b = _number(value_a), _number(value_b)
     if unit and a is not None and b is not None:
-        # A number equal to one of the limits is the customer quoting a policy, not describing their case.
-        mentioned = [v for v in (float(x) for x in re.findall(UNIT_PATTERNS[unit], text, re.IGNORECASE))
-                     if v not in (a, b)]
+        found = [float(x) for x in re.findall(UNIT_PATTERNS[unit], text, re.IGNORECASE)]
+        # A number equal to one of the limits is usually the customer quoting a policy, so prefer the others.
+        # If there are no others, it is the customer's own value.
+        mentioned = [v for v in found if v not in (a, b)] or found
         unit_name = unit.upper() if unit in ("mb", "gb") else unit
         if mentioned:
             low, high = sorted([a, b])
@@ -139,12 +141,16 @@ class Investigator:
             provided.setdefault(name, value)
 
         attempted = []
+        said = normalise_quote(text)
         for attempt in analysis.attempted:
             article = self.kb.get(attempt.article_id)
-            if article and attempt.article_id in relevant_ids and any(s.number == attempt.step for s in article.steps):
-                attempted.append(attempt)
-            else:
+            if not (article and attempt.article_id in relevant_ids and any(s.number == attempt.step for s in article.steps)):
                 log.append(f"Dropped attempted step {attempt.article_id} #{attempt.step}: no such step")
+            elif normalise_quote(attempt.quote) not in said:
+                log.append(f"Dropped attempted step {attempt.article_id} #{attempt.step}: its quote is not in the "
+                           "customer's messages")
+            else:
+                attempted.append(attempt)
 
         conflicts = fact_conflicts(relevant, text, plan=ticket.plan) + [
             c for c in analysis.conflicts if c.article_a in relevant_ids and c.article_b in relevant_ids

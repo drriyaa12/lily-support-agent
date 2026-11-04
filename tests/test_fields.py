@@ -22,6 +22,9 @@ class ExtractInfoTests(unittest.TestCase):
         ("app_version", "Quillstack 4.6.2 on macOS 14.2.1", "4.6.2"),
         ("os", "I have too many browser windows open", None),
         ("os", "the desktop app on Windows keeps crashing", "Windows"),
+        # Final check: a capitalised Windows is the OS; a codename between OS and version is still the OS.
+        ("os", "Windows here, and the desktop app won't sync", "Windows"),
+        ("app_version", "macOS Sonoma 14.2.1, and the app keeps crashing", None),
     ]
 
     def test_table(self):

@@ -61,6 +61,13 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(result.decision.action, "resolve")
         self.assertEqual([s.number for s in result.decision.steps], [1, 2, 3, 4])
 
+    def test_baseline_replies_and_handoffs_are_not_signed_by_lily(self):
+        resolved = self.baseline.handle(make_ticket("How do I export the whole workspace?", subject="Export"))
+        escalated = self.baseline.handle(make_ticket(
+            "Our IT team needs SAML single sign-on through our identity provider before rollout.", subject="SSO"))
+        self.assertNotIn("Lily", resolved.reply)
+        self.assertNotIn("Lily", escalated.handoff.to_markdown())
+
     def test_escalates_when_nothing_matches(self):
         result = self.baseline.handle(make_ticket(
             "Our IT team needs SAML single sign-on through our identity provider before rollout.",

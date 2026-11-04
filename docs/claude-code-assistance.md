@@ -17,7 +17,7 @@ intended behaviour.
 | Development cases and labels (`eval/cases.json`, `eval/LABELING.md`) | Claude Code |
 | Held-out cases (`eval/heldout_cases.json`) | A separate Claude Code agent |
 | Blind audit of the held-out labels | Three more Claude Code agents |
-| Pre-publish review (50 agents) and the fixes that followed | Claude Code |
+| Pre-publish review (50 agents), a second check (40 agents), and the fixes that followed | Claude Code |
 | Decisions to publish, final review of claims | Repository owner |
 
 ## How the evaluation data was produced
@@ -41,18 +41,25 @@ them:
 1. Three further agents independently re-derived every label from the guide,
    again without seeing code or results. They agreed with all 10 labels. No case
    was disputed or ambiguous.
-2. Lily ran once on the code exactly as it stood (commit `90af606`) and scored
-   6/10. That run is kept in `results/heldout-first-run/`.
-3. The review fixes below came from reviewers who were told not to open the
-   held-out cases, and none was designed around a held-out ticket. Afterwards
+2. Lily ran once on the code as committed in `90af606` and scored 6/10. That
+   run is kept in `results/heldout-first-run/`.
+3. The first round of review fixes came from reviewers who were told not to open
+   the held-out cases, and none was designed around a held-out ticket. Afterwards
    Lily still scored 6/10. A case-by-case comparison showed that no held-out
    decision changed, for Lily or the baseline.
+4. The second check found that H01's correct score was an accident: the word
+   "without" in "it saved without any error" was read as "the customer can't do
+   this". Fixing that generic rule changed one held-out outcome. H01 is still
+   the right decision, but Lily's reply now re-sends a step the customer had
+   done, so it scores as an incorrect resolution. Correct decisions stay at 6/10,
+   and correct resolutions drop from 3/3 to 2/3. No development case changed.
 
 Limits of this independence: every agent was the same model family, and the
 held-out cases follow the same labelling guide that Lily's rules implement.
 Tickets written by real customers or by other people would be a stronger test.
-The held-out cases have since been read to explain the four misses in the
-README, so any future change should be checked against a fresh set.
+The held-out cases have since been read to explain the misses in the README,
+and the second check's reviewer of the docs read them too. Any future change
+should therefore be checked against a fresh set.
 
 ## Pre-publish review
 
@@ -85,10 +92,32 @@ Two findings were only partly fixed:
   counts as active. Replies don't change their wording for incidents resolved
   after the ticket arrived.
 
+## Second check
+
+After those fixes, a second workflow of 40 agents re-checked the finished
+repository: every claim in the docs against the result files, a fresh copy run
+with the README's commands, a review of the fixes for new bugs, and
+confidentiality. It confirmed 27 findings and refuted 5. All but one were fixed,
+each code fix again with a failing test first:
+
+| Area | Confirmed | Examples |
+|---|---|---|
+| Regressions and older bugs | 11 | a sentence ending in "?" hid reported attempts (high severity, introduced by the first round); "We noticed X and reinstalled" missed the reinstall; one generic word ("allow") counted as a step; a Free-plan customer asking about an upgrade lost a real conflict; a value equal to a limit escalated needlessly; "Windows" and "macOS Sonoma 14.2.1" misread; "logged myself out", "cleared the cache" and "resetting" missed; the baseline's replies were signed as Lily |
+| Docs claims | 7 | the H06 miss was misexplained; H01's correct score was an accident (above); "Measured vs intended" totals didn't match their labels; the prompt-injection claim was too strong; the review summary overclaimed; raw-output contents and the settings file were described too broadly |
+| Reproducibility | 4 | README commands with trailing `#` comments fail when pasted into macOS's default shell (zsh); the ticket file format wasn't documented and a wrong-shaped file was read silently; Claude mode without a key ended in a traceback; the H06 explanation contradicted its transcript |
+| Publication | 5 | the same overclaims, the baseline's signature, ordering claims stated as fact, and one item that needs the repository owner (below) |
+
+The item not fixed here: when PR #1 was merged with GitHub's merge button, the
+merge commit GitHub created recorded the owner's personal email address as its
+author. Every commit made in this project uses the owner's private GitHub
+no-reply address. Fixing this needs the owner to turn on GitHub's email-privacy
+setting, and optionally to remove that commit from the public history. Later
+changes are merged without GitHub's merge button, so this can't recur.
+
 ## What was verified
 
-- **Tests.** `python3 -m unittest discover -s tests -t .` runs 123 tests on
-  Python 3.9 with no third-party packages, and all pass.
+- **Tests.** `python3 -m unittest discover -s tests -t .` passes on Python 3.9
+  with no third-party packages.
 - **Offline evaluation.** The numbers in the README and in `results/` come from
   the commands shown there and can be regenerated exactly. Only the timestamp
   changes between runs.

@@ -165,9 +165,10 @@ class ClaudeErrorTests(CleanEnvironment):
                 analysis = ClaudeAnalyzer(client=raising_client(error)).analyze(TICKET, [])
                 self.assertIn("API error", analysis.error)
 
-    def test_configuration_errors_still_stop_the_run(self):
-        with self.assertRaises(APIStatusError):
+    def test_configuration_errors_stop_the_run_with_a_readable_message(self):
+        with self.assertRaises(RuntimeError) as stop:
             ClaudeAnalyzer(client=raising_client(APIStatusError(401))).analyze(TICKET, [])
+        self.assertIn("API request failed", str(stop.exception))
 
     def test_environment_overrides_model_and_effort(self):
         os.environ.update(SUPPORT_AGENT_MODEL="claude-sonnet-5-5", SUPPORT_AGENT_EFFORT="high")

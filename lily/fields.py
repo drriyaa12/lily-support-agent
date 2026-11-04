@@ -45,6 +45,7 @@ FIELDS: Dict[str, InfoField] = {
             # Bare "windows" only with context: "browser windows" is not an operating system.
             _p(r"\b(?:on|using|running|with)\s+(windows)\b"),
             _p(r"\b(windows)\s+(?:pc|laptop|computer|machine|desktop)\b"),
+            _p(r"\b(Windows)\b", 0),  # capitalised, it names the OS
             _p(r"\b(?:macos|mac\s?os|macbook|imac|mac|linux|ubuntu|chromeos)\b"),
         ),
     ),
@@ -52,7 +53,7 @@ FIELDS: Dict[str, InfoField] = {
         "app_version",
         "the app version, shown in Help → About (for example, 4.6.2)",
         (_p(r"\b(?:v|version\s*)?(\d+\.\d+\.\d+)\b"),),
-        not_after=_p(r"(?:windows|macos|mac\s?os(?:\s?x)?|ios|ipados|android|ubuntu)\s*$"),
+        not_after=_p(r"(?:windows|macos|mac\s?os(?:\s?x)?|os\s?x|ios|ipados|android|ubuntu|linux)(?:\s+[a-z]+){0,2}\s*$"),
     ),
     "invoice_number": InfoField(
         "invoice_number",

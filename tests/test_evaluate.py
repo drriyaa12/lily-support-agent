@@ -153,6 +153,15 @@ class CommandLineTests(unittest.TestCase):
                 main(["run", "C25", "--analyzer", "claude"])
         self.assertIn("needs the Anthropic SDK", str(stop.exception.code))
 
+    def test_a_ticket_file_without_messages_is_rejected_clearly(self):
+        from lily.__main__ import load_ticket
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ticket.json"
+            path.write_text(json.dumps({"id": "T-1", "created_at": "2026-11-04T10:00:00Z", "subject": "Help"}))
+            with self.assertRaises(SystemExit) as stop:
+                load_ticket(str(path))
+        self.assertIn("messages", str(stop.exception.code))
+
     def test_run_finds_held_out_cases_too(self):
         done = subprocess.run([sys.executable, "-m", "lily", "run", "H03"], cwd=ROOT, check=True,
                               capture_output=True, text=True)

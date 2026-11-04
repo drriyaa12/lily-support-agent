@@ -96,10 +96,14 @@ class InvestigatorGuardrailTests(unittest.TestCase):
 
     def test_drops_attempted_steps_that_do_not_exist(self):
         inv = self.investigate(attempted=[
-            AttemptedStep("KB-104", 2, "customer_reported", "signed out"),
-            AttemptedStep("KB-104", 9, "customer_reported", "made up"),
+            AttemptedStep("KB-104", 2, "customer_reported", "stuck syncing"),
+            AttemptedStep("KB-104", 9, "customer_reported", "stuck syncing"),
         ])
         self.assertEqual([a.step for a in inv.attempted], [2])
+
+    def test_drops_attempted_steps_whose_quote_is_not_in_the_ticket(self):
+        inv = self.investigate(attempted=[AttemptedStep("KB-104", 3, "customer_reported", "I reset the local cache")])
+        self.assertEqual(inv.attempted, [])
 
     def test_duplicate_relevant_ids_are_logged_as_duplicates(self):
         inv = self.investigate(relevant_ids=["KB-104", "KB-104"])
@@ -134,6 +138,19 @@ class DetailPrecedenceTests(unittest.TestCase):
                             provided_info={"os": "Windows 11"})
         inv = Investigator(kb, BM25Index(kb.values()), [], FixedAnalyzer(analysis)).investigate(ticket)
         self.assertEqual(inv.provided_info["os"], "Windows 11")
+
+
+class FinalCheckConflictTests(unittest.TestCase):
+    def setUp(self):
+        self.kb = real_kb()
+
+    def test_a_free_customer_asking_about_paid_limits_still_sees_the_conflict(self):
+        text = "I'm on Free. If I upgrade to Team, can I upload a 180 MB video?"
+        self.assertTrue(fact_conflicts([self.kb["KB-105"], self.kb["KB-106"]], text, plan="Free")[0].matters)
+
+    def test_a_customers_value_equal_to_a_limit_is_still_their_value(self):
+        text = "Uploading a 100 MB video fails every time."
+        self.assertFalse(fact_conflicts([self.kb["KB-105"], self.kb["KB-106"]], text)[0].matters)
 
 
 if __name__ == "__main__":

@@ -22,17 +22,24 @@ EXPLICIT_ATTEMPT = re.compile(r"\b(?:tried|already|followed)\b", re.IGNORECASE)
 # A first-person past-tense action: "I updated…", "I've updated…", "we rotated…"
 PAST_ACTION = re.compile(r"\b(?:i|we)(?:'ve| have)?\s+(?:also\s+|already\s+|then\s+|even\s+)?(\w+ed)\b",
                          re.IGNORECASE)
+# A further past-tense action joined to the first: "…and reinstalled", "…then rotated"
+COORDINATED_ACTION = re.compile(r"\b(?:and|then)\s+(?:also\s+|even\s+)?(\w+ed)\b", re.IGNORECASE)
+FIRST_PERSON = re.compile(r"\b(?:i|we|i've|we've)\b", re.IGNORECASE)
+# A sentence that opens like a question asks about steps rather than reporting them.
+QUESTION_START = re.compile(r"^\W*(?:do|does|did|should|can|could|would|will|is|are|was|were|how|what|why|which"
+                            r"|have you|has)\b", re.IGNORECASE)
 # "-ed" words that report a wish or a perception, not something done to fix the problem.
 # (Words ending in "eed", such as "need", are excluded by rule.)
-NOT_ACTIONS = {"noticed", "wanted", "wondered", "received", "hoped", "liked", "loved", "assumed", "expected",
-               "guessed", "believed", "realized", "realised", "worried", "imagined", "supposed", "preferred",
-               "planned", "intended", "decided"}
+NOT_ACTIONS = {"noticed", "wanted", "wondered", "hoped", "liked", "loved", "assumed", "expected", "guessed",
+               "believed", "realized", "realised", "worried", "imagined", "supposed", "preferred", "planned",
+               "intended"}
 # Plan names, time units and numbers appear in many tickets and never identify a step on their own
 # ("Business plan 20 days ago" is not "Allow 5–10 business days").
-NON_INFORMATIVE = {"free", "team", "business", "plan", "minut", "hour", "day", "week", "month", "year"}
+NON_INFORMATIVE = {"free", "team", "business", "minut", "hour", "day", "week", "month", "year"}
 # "I don't have my backup codes", "lost", "not signed in on any other device"
 UNAVAILABLE = re.compile(
-    r"\b(?:don't|do not|no longer) have\b|\blost\b|\bnot\b[^.!?]*\bany (?:other|more)\b|\bno other\b|\bwithout\b",
+    r"\b(?:don't|do not|no longer) have\b|\blost\b|\bnot\b[^.!?]*\bany (?:other|more)\b|\bno other\b"
+    r"|\bwithout (?:a|an|my|our)\b",
     re.IGNORECASE,
 )
 # "still", "didn't work", "no luck"…
@@ -50,28 +57,41 @@ def _plain(text: str) -> str:
     return text.replace("’", "'")
 
 
+def _is_action(word: str) -> bool:
+    word = word.lower()
+    return word not in NOT_ACTIONS and not word.endswith("eed")
+
+
 def is_attempt(sentence: str) -> bool:
     """Does this customer sentence report something they already did?"""
     if EXPLICIT_ATTEMPT.search(sentence):
         return True
-    if sentence.rstrip().endswith("?"):  # a question asks about steps; it does not report doing them
+    if QUESTION_START.search(sentence):  # "Do I need to reinstall?" asks; it does not report
         return False
-    return any(not (word.lower() in NOT_ACTIONS or word.lower().endswith("eed"))
-               for word in PAST_ACTION.findall(sentence))
+    verbs = PAST_ACTION.findall(sentence)
+    if FIRST_PERSON.search(sentence):
+        verbs += COORDINATED_ACTION.findall(sentence)
+    return any(_is_action(v) for v in verbs)
 
 
-def _step_tokens(step) -> List[str]:
-    return [t for t in tokenize(step.title) if t not in NON_INFORMATIVE and not t.isdigit()]
+def _step_tokens(step):
+    """(informative tokens, all tokens) of a step title."""
+    every = tokenize(step.title)
+    return [t for t in every if t not in NON_INFORMATIVE and not t.isdigit()], every
 
 
-def _step_matches(step_tokens: List[str], text_tokens: set, loose: bool = False) -> bool:
-    if not step_tokens:
+def _step_matches(tokens, text_tokens: set, loose: bool = False) -> bool:
+    informative, every = tokens
+    if not informative:
         return False
-    shared = set(step_tokens) & text_tokens
+    shared = set(informative) & text_tokens
     if loose:  # the customer says they lack something: naming the thing is enough
         return bool(shared)
-    needed = min(2, len(set(step_tokens)))
-    return len(shared) >= needed or (step_tokens[0] in SPECIFIC_ACTIONS and step_tokens[0] in text_tokens)
+    if informative[0] in SPECIFIC_ACTIONS and informative[0] in text_tokens:
+        return True
+    if len(set(informative)) == 1:  # one generic word ("allow") is not enough on its own
+        return bool(shared) and len(set(every) & text_tokens) >= 2
+    return len(shared) >= 2
 
 
 def find_attempts(ticket: Ticket, article: Article) -> List[AttemptedStep]:

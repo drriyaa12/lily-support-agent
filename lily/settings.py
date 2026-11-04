@@ -1,4 +1,6 @@
-"""Every tunable number in one place, with how it was chosen.
+"""The decision thresholds in one place, with how each was chosen.
+
+(The BM25 constants are in retrieval.py, and the Claude request settings in claude_analyzer.py.)
 
 These were set by looking at retrieval scores on the 26 development cases in
 eval/cases.json (see README, "Limitations"): they are tuned, not validated.
@@ -8,8 +10,8 @@ eval/cases.json (see README, "Limitations"): they are tuned, not validated.
 TOP_K = 5
 
 # Minimum BM25 score for the offline analyzer to treat an article as relevant.
-# From the dev cases: correct top matches start at 8.5 (C10); the second
-# article of C14's conflict scores 8.0, so the cut-off must sit below that;
+# From the dev cases: correct top matches start at 8.4 (C14, KB-303); the
+# second article of C14's conflict scores 8.0, so the cut-off must sit below that;
 # C24 (no KB coverage) tops out at 6.0. No threshold can fix C25 (no coverage,
 # but a wrong keyword match at 14.5): that is a limit of keyword search.
 RELEVANCE_THRESHOLD = 7.5

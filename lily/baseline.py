@@ -21,6 +21,11 @@ from lily.result import Result
 from lily.retrieval import BM25Index
 
 
+# The baseline is a comparison system, so it does not sign as Lily.
+SIGNATURE = "Baseline responder (for comparison only)"
+PREPARED_BY = "the baseline responder (for comparison only)"
+
+
 class BaselineAgent:
     name = "baseline"
 
@@ -44,5 +49,5 @@ class BaselineAgent:
         else:
             decision = Decision("escalate", "no_kb_coverage", "No article scored above the threshold.",
                                 trace=["No match above threshold", "=> escalate (no_kb_coverage)"])
-        handoff = build_handoff(decision, inv) if decision.action == "escalate" else None
-        return Result(self.name, ticket, inv, decision, compose_reply(decision, inv), handoff)
+        handoff = build_handoff(decision, inv, prepared_by=PREPARED_BY) if decision.action == "escalate" else None
+        return Result(self.name, ticket, inv, decision, compose_reply(decision, inv, signature=SIGNATURE), handoff)

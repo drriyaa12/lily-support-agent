@@ -35,9 +35,17 @@ def make_analyzer(args, raw_dir=None):
 
 def load_ticket(ref: str) -> Ticket:
     path = Path(ref)
-    if path.suffix == ".json" and path.exists():
-        data = json.loads(path.read_text(encoding="utf-8"))
-        return Ticket.from_dict(data.get("ticket", data))
+    if path.suffix.lower() == ".json" and path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8-sig"))
+            ticket = Ticket.from_dict(data.get("ticket", data))
+        except (ValueError, KeyError, TypeError, AttributeError) as exc:
+            sys.exit(f"{ref} is not a ticket ({exc.__class__.__name__}: {exc}). Use the shape of a \"ticket\" in "
+                     "eval/cases.json: id, created_at, customer {name, plan}, channel, subject, messages.")
+        if not ticket.customer_messages:
+            sys.exit(f"{ref} has no customer messages. Add \"messages\": [{{\"role\": \"customer\", "
+                     f"\"text\": \"...\"}}].")
+        return ticket
     for cases_file in (ROOT / CASES, ROOT / HELDOUT):
         for case in load_cases(cases_file):
             if case["case_id"].lower() == ref.lower() or case["ticket"]["id"].lower() == ref.lower():

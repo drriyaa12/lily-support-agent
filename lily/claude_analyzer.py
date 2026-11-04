@@ -193,7 +193,7 @@ class ClaudeAnalyzer:
             # Transient failures are recorded and scored as analysis errors so one bad request doesn't stop a
             # whole evaluation. Anything else (bad key, invalid request) is a configuration problem: re-raise.
             if not is_transient(exc):
-                raise
+                raise RuntimeError(f"Claude API request failed: {describe_error(exc)}: {exc}") from exc
             self._save({"ticket_id": ticket.id, "requested_model": self.model, "served_model": None,
                         "effort": self.effort, "stop_reason": None, "usage": None, "output": None,
                         "error": describe_error(exc)})

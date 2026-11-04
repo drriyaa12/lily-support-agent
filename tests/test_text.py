@@ -38,5 +38,10 @@ class LogPhraseTests(unittest.TestCase):
         self.assertNotIn("sign", tokenize("I attached the sync log"))
 
 
+class FinalCheckTokenTests(unittest.TestCase):
+    def test_log_with_a_pronoun_still_means_sign(self):
+        self.assertEqual(tokenize("I logged myself out and back in"), ["sign"])
+
+
 if __name__ == "__main__":
     unittest.main()

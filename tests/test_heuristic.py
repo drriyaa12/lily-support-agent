@@ -146,5 +146,37 @@ class AttemptFalsePositiveTests(unittest.TestCase):
         self.assertNotIn("Latest message", summarize(make_ticket("My desktop app is not syncing.", "")))
 
 
+class FinalCheckAttemptTests(unittest.TestCase):
+    """Final-check findings on attempt detection."""
+
+    def setUp(self):
+        self.kb = real_kb()
+
+    def test_a_report_that_ends_with_a_question_still_counts(self):
+        t = make_ticket("I've updated the app and reinstalled it but it still won't sync, any ideas?")
+        self.assertEqual(steps_of(find_attempts(t, self.kb["KB-104"])), [1, 4])
+
+    def test_coordinated_actions_after_a_perception_verb_count(self):
+        t = make_ticket("We noticed the sync stopped and reinstalled the app.")
+        self.assertEqual(steps_of(find_attempts(t, self.kb["KB-104"])), [4])
+
+    def test_a_one_word_step_needs_more_than_that_word(self):
+        t = make_ticket("I already allowed my teammate to see the invoices.")
+        self.assertEqual(find_attempts(t, self.kb["KB-202"]), [])
+
+    def test_plan_still_identifies_the_plan_step(self):
+        t = make_ticket("We already switched to a new plan.")
+        self.assertEqual(steps_of(find_attempts(t, self.kb["KB-204"])), [2])
+
+    def test_without_any_error_is_not_a_missing_prerequisite(self):
+        t = make_ticket("I went to the billing settings and the new card saved without any error.")
+        self.assertNotIn("not_possible", {a.how for a in find_attempts(t, self.kb["KB-201"])})
+
+    def test_cleared_and_resetting_mean_the_cache_reset(self):
+        for text in ("I've cleared the cache.", "I tried resetting the cache."):
+            with self.subTest(text=text):
+                self.assertIn(3, steps_of(find_attempts(make_ticket(text), self.kb["KB-104"])))
+
+
 if __name__ == "__main__":
     unittest.main()

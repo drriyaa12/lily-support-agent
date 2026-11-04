@@ -33,10 +33,12 @@ SYNONYMS = {
     "megabyte": "mb", "megabytes": "mb",
     "removal": "remove",
     "deletion": "delete",
+    "cleared": "reset", "clearing": "reset", "resetting": "reset",
 }
 
 # "log in", "logged out", "logging back in" mean signing in or out; a "sync log" does not.
-_LOG_IN_OUT = re.compile(r"\blog(?:ged|ging)?(?=[\s-]+(?:in|out|back|into|on|off)\b)")
+_LOG_IN_OUT = re.compile(
+    r"\blog(?:ged|ging|s)?(?=(?:[\s-]+(?:me|myself|him|her|us|them|you))?[\s-]+(?:in|out|back|into|on|off)\b)")
 _WORD = re.compile(r"[a-z0-9]+")
 _SENTENCE_BREAK = re.compile(r"(?<=[.!?])\s+|\n+")
 

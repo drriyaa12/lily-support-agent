@@ -1,6 +1,6 @@
 # Lily evaluation results: held-out set, heuristic analyzer
 
-- Generated 2026-11-04 20:53 UTC with `python3 -m lily eval --cases eval/heldout_cases.json`
+- Generated 2026-11-04 21:13 UTC with `python3 -m lily eval --cases eval/heldout_cases.json`
 - 10 cases from `eval/heldout_cases.json` (sha256 `3eedb5e35ab9`)
 - **Lily**: investigator + decision policy, offline heuristic analyzer (no API calls)
 - **baseline**: same KB search and threshold; sends every step of the top article, otherwise escalates
@@ -12,8 +12,8 @@
 |---|---|---|
 | Correct decision (resolve / clarify / escalate) | 6/10 (60%) | 3/10 (30%) |
 | Correct decision for the right reason | 6/10 (60%) | 2/10 (20%) |
-| Correct resolutions | 3 of 3 | 1 of 3 |
-| Incorrect resolutions (any case) | 2 | 8 |
+| Correct resolutions | 2 of 3 | 1 of 3 |
+| Incorrect resolutions (any case) | 3 | 8 |
 | Appropriate escalations | 2 of 5 | 0 of 5 |
 | Unnecessary escalations | 1 | 1 |
 | Missed escalations (asked a question instead) | 1 | 0 |
@@ -21,7 +21,7 @@
 | Clarifying questions asking for the wrong details | 0 | 0 |
 | Unnecessary clarifying questions | 0 | 0 |
 | Analysis errors | 0 | 0 |
-| Resolutions that repeated a step already tried | 1 | 6 |
+| Resolutions that repeated a step already tried | 2 | 6 |
 | Attempted steps claimed that the labels don't support | 1 | 0 |
 | Escalations citing an expected source | 2/2 (100%) | n/a |
 | Complete handoffs (issue, every attempted fix and no invented ones, open questions) | 3/3 (100%) | 1/1 (100%) |
@@ -30,7 +30,7 @@
 
 | Category | Cases | Lily correct | Baseline correct |
 |---|---|---|---|
-| routine | 2 | 2 | 1 |
+| routine | 2 | 1 | 1 |
 | known_incident | 1 | 1 | 0 |
 | missing_info | 2 | 1 | 0 |
 | conflicting_guidance | 1 | 0 | 0 |
@@ -58,7 +58,7 @@
 
 | Case | Category | Expected | Lily | Baseline |
 |---|---|---|---|---|
-| [H01](transcripts/H01.md) | routine | resolve (supported_fix) | ✅ resolve (supported_fix) | ❌ resolve (supported_fix): incorrect_resolution, repeated a step the customer already tried |
+| [H01](transcripts/H01.md) | routine | resolve (supported_fix) | ❌ resolve (supported_fix): incorrect_resolution, repeated a step the customer already tried | ❌ resolve (supported_fix): incorrect_resolution, repeated a step the customer already tried |
 | [H02](transcripts/H02.md) | routine | resolve (supported_fix) | ✅ resolve (supported_fix) | ✅ resolve (supported_fix) |
 | [H03](transcripts/H03.md) | known_incident | resolve (known_incident) | ✅ resolve (known_incident) | ❌ resolve (supported_fix): incorrect_resolution, cited ['KB-104'], expected ['INC-2207'] |
 | [H04](transcripts/H04.md) | missing_info | clarify (missing_info) | ✅ clarify (missing_info) | ❌ resolve (supported_fix): incorrect_resolution, should have chosen clarify |

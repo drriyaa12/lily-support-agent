@@ -39,8 +39,9 @@ When several apply, the first one wins:
 ## How these labels were made
 
 The cases and labels were written by Claude Code (an AI coding assistant) from
-this guide **before** any agent code existed, and were not changed afterwards
-to fit the agent, with one exception. The pre-publish review found that C22's
+this guide **before** any agent code existed. That is our account: the git
+history can't show it, because the first commit contains both the cases and the
+code. They were not changed afterwards to fit the agent, with one exception. The pre-publish review found that C22's
 label left out a step the ticket states ("I've already changed my password"),
 so C22 now lists KB-103 step 1 as attempted. Its decision did not change. The
 same assistant then wrote the agent, so these cases are a development set, not

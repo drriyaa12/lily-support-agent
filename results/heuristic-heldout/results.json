@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-11-04 20:53 UTC",
+    "generated": "2026-11-04 21:13 UTC",
     "command": "python3 -m lily eval --cases eval/heldout_cases.json",
     "split": "held-out",
     "analyzer": "heuristic",
@@ -15,8 +15,8 @@
       "decision_correct": 6,
       "reason_correct": 6,
       "outcomes": {
-        "correct_resolution": 3,
-        "incorrect_resolution": 2,
+        "correct_resolution": 2,
+        "incorrect_resolution": 3,
         "appropriate_escalation": 2,
         "unnecessary_escalation": 1,
         "missed_escalation": 1,
@@ -27,7 +27,7 @@
       },
       "by_category": {
         "routine": [
-          2,
+          1,
           2
         ],
         "known_incident": [
@@ -55,7 +55,7 @@
           1
         ]
       },
-      "repeated_failed_fix": 1,
+      "repeated_failed_fix": 2,
       "unlabelled_attempts": 1,
       "handoffs": [
         3,
@@ -163,13 +163,13 @@
         "expected_reason": "supported_fix",
         "predicted": "resolve",
         "predicted_reason": "supported_fix",
-        "outcome": "correct_resolution",
-        "note": "",
+        "outcome": "incorrect_resolution",
+        "note": "repeated a step the customer already tried",
         "decision_match": true,
         "reason_match": true,
-        "repeated_failed_fix": false,
+        "repeated_failed_fix": true,
         "attempts_found": [
-          2,
+          1,
           2
         ],
         "unlabelled_attempts": 0,
@@ -179,11 +179,12 @@
         "system": "Lily",
         "action": "resolve",
         "reason": "supported_fix",
-        "explanation": "KB-201 covers this and 1 step(s) have not been tried yet.",
+        "explanation": "KB-201 covers this and 2 step(s) have not been tried yet.",
         "cited_sources": [
           "KB-201"
         ],
         "steps_offered": [
+          2,
           3
         ],
         "missing_info": [],
@@ -191,13 +192,7 @@
           {
             "article_id": "KB-201",
             "step": 1,
-            "how": "not_possible",
-            "quote": "Yesterday I went into the billing page in settings and swapped in our new card, it saved without any error, but the invoice still shows as past due this afternoon."
-          },
-          {
-            "article_id": "KB-201",
-            "step": 2,
-            "how": "not_possible",
+            "how": "customer_reported",
             "quote": "Yesterday I went into the billing page in settings and swapped in our new card, it saved without any error, but the invoice still shows as past due this afternoon."
           }
         ],
@@ -209,11 +204,11 @@
           "4. Active incident for 'billing'? no",
           "5. Conflicting guidance that matters? no",
           "6. Required details missing for KB-201? no",
-          "7. Steps already tried or impossible: [1, 2]; remaining: [3]",
+          "7. Steps already tried or impossible: [1]; remaining: [2, 3]",
           "8. Verified quote from KB-201? yes",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Ines,\n\nI understand these aren't possible for you: open billing settings, replace the card. The next steps are:\n\n1. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Ines,\n\nThanks for already trying these: open billing settings. The next steps are:\n\n1. Replace the card. Choose \"Update payment method\", enter the new card and save.\n2. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
         "handoff": null
       },
       "baseline": {
@@ -254,7 +249,7 @@
           "Top match KB-201 (24.2) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Ines,\n\nThanks for getting in touch. Here's what to do:\n\n1. Open billing settings. Go to Settings → Billing. Only the workspace owner can see this page.\n2. Replace the card. Choose \"Update payment method\", enter the new card and save.\n3. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Ines,\n\nThanks for getting in touch. Here's what to do:\n\n1. Open billing settings. Go to Settings → Billing. Only the workspace owner can see this page.\n2. Replace the card. Choose \"Update payment method\", enter the new card and save.\n3. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -352,7 +347,7 @@
           "Top match KB-105 (15.8) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Kwame,\n\nThanks for getting in touch. Here's what to do:\n\n1. Check the file against the size limit. Paid plans accept files up to 250 MB; the Free plan accepts files up to 50 MB.\n2. Check the workspace storage quota. Settings → Usage shows how much storage is left. Uploads fail when the workspace is full.\n3. Upload large files from the desktop app. The desktop app resumes interrupted uploads; browser uploads restart from zero.\n\nThese steps come from our guide \"File uploads fail or stop partway\" (KB-105). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Kwame,\n\nThanks for getting in touch. Here's what to do:\n\n1. Check the file against the size limit. Paid plans accept files up to 250 MB; the Free plan accepts files up to 50 MB.\n2. Check the workspace storage quota. Settings → Usage shows how much storage is left. Uploads fail when the workspace is full.\n3. Upload large files from the desktop app. The desktop app resumes interrupted uploads; browser uploads restart from zero.\n\nThese steps come from our guide \"File uploads fail or stop partway\" (KB-105). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -460,7 +455,7 @@
           "Top match KB-104 (15.3) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Hannah,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Choose Help → Check for updates and restart the app after installing.\n2. Sign out and back in. This refreshes the sync session without touching local files.\n3. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n4. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Hannah,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Choose Help → Check for updates and restart the app after installing.\n2. Sign out and back in. This refreshes the sync session without touching local files.\n3. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n4. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -574,7 +569,7 @@
           "Top match KB-107 (9.8) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Priya,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Versions before 4.6.0 have a known start-up crash that updating fixes. Download the latest installer from quillstack.example/download.\n2. Restart the computer. This clears locked files left behind by an earlier crash.\n3. Reset the local cache. Hold Shift while opening the app to start in safe mode, then choose Reset local cache.\n4. Reinstall the app. Uninstall Quillstack, then install the latest version again.\n\nThese steps come from our guide \"Desktop app closes or crashes on launch\" (KB-107). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Priya,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Versions before 4.6.0 have a known start-up crash that updating fixes. Download the latest installer from quillstack.example/download.\n2. Restart the computer. This clears locked files left behind by an earlier crash.\n3. Reset the local cache. Hold Shift while opening the app to start in safe mode, then choose Reset local cache.\n4. Reinstall the app. Uninstall Quillstack, then install the latest version again.\n\nThese steps come from our guide \"Desktop app closes or crashes on launch\" (KB-107). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -645,7 +640,8 @@
             "Is this supported, and which team owns it? No KB article covers: Problems since office move.",
             "Should a KB article be written for this kind of request?"
           ],
-          "suggested_next_step": "Answer from product knowledge or route to the owning team, and consider adding a KB article."
+          "suggested_next_step": "Answer from product knowledge or route to the owning team, and consider adding a KB article.",
+          "prepared_by": "Lily, the AI support assistant"
         }
       },
       "baseline": {
@@ -677,7 +673,7 @@
           "No match above threshold",
           "=> escalate (no_kb_coverage)"
         ],
-        "reply": "Hi Marguerite,\n\nThanks for the details. I've passed your request to our Tier 2 Support team with a summary of what you've told us and tried, so you won't need to repeat yourself. They'll reply here.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Marguerite,\n\nThanks for the details. I've passed your request to our Tier 2 Support team with a summary of what you've told us and tried, so you won't need to repeat yourself. They'll reply here.\n\nBaseline responder (for comparison only)",
         "handoff": {
           "ticket_id": "T-3005",
           "queue": "Tier 2 Support",
@@ -695,7 +691,8 @@
             "Is this supported, and which team owns it? No KB article covers: Problems since office move.",
             "Should a KB article be written for this kind of request?"
           ],
-          "suggested_next_step": "Answer from product knowledge or route to the owning team, and consider adding a KB article."
+          "suggested_next_step": "Answer from product knowledge or route to the owning team, and consider adding a KB article.",
+          "prepared_by": "the baseline responder (for comparison only)"
         }
       }
     },
@@ -786,7 +783,7 @@
           "Top match KB-303 (8.0) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Jonas,\n\nThanks for getting in touch. From our guide \"Roles and permissions\" (KB-303):\n\n> Admins can invite and remove members and change workspace settings.\n\nIf that doesn't answer your question, reply here and we'll help.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Jonas,\n\nThanks for getting in touch. From our guide \"Roles and permissions\" (KB-303):\n\n> Admins can invite and remove members and change workspace settings.\n\nIf that doesn't answer your question, reply here and we'll help.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -889,7 +886,8 @@
           "unresolved_questions": [
             "Every step in KB-102 (Signing in after losing your two-step verification device) has failed or cannot be done by this customer. What is causing the problem, and what should happen next?"
           ],
-          "suggested_next_step": "If the customer has no backup codes and no trusted device, do not try to bypass verification or change the account email. Escalate to Account Security, who verify identity before removing two-step verification."
+          "suggested_next_step": "If the customer has no backup codes and no trusted device, do not try to bypass verification or change the account email. Escalate to Account Security, who verify identity before removing two-step verification.",
+          "prepared_by": "Lily, the AI support assistant"
         }
       },
       "baseline": {
@@ -929,7 +927,7 @@
           "Top match KB-102 (30.2) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Lukas,\n\nThanks for getting in touch. Here's what to do:\n\n1. Use a backup code. On the verification screen, choose \"Use a backup code\" and enter one of the ten codes saved when two-step verification was set up. Each code works once.\n2. Use a trusted device. If the customer is still signed in on another computer or tablet, they can approve the sign-in from Settings → Security → Trusted devices.\n\nThese steps come from our guide \"Signing in after losing your two-step verification device\" (KB-102). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Lukas,\n\nThanks for getting in touch. Here's what to do:\n\n1. Use a backup code. On the verification screen, choose \"Use a backup code\" and enter one of the ten codes saved when two-step verification was set up. Each code works once.\n2. Use a trusted device. If the customer is still signed in on another computer or tablet, they can approve the sign-in from Settings → Security → Trusted devices.\n\nThese steps come from our guide \"Signing in after losing your two-step verification device\" (KB-102). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -1042,7 +1040,7 @@
         "system": "baseline",
         "action": "resolve",
         "reason": "supported_fix",
-        "explanation": "Top match KB-104 scored 32.5, above the threshold.",
+        "explanation": "Top match KB-104 scored 34.6, above the threshold.",
         "cited_sources": [
           "KB-104"
         ],
@@ -1055,10 +1053,10 @@
         "missing_info": [],
         "attempted": [],
         "trace": [
-          "Top match KB-104 (32.5) >= 7.5",
+          "Top match KB-104 (34.6) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Aiyana,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Choose Help → Check for updates and restart the app after installing.\n2. Sign out and back in. This refreshes the sync session without touching local files.\n3. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n4. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Aiyana,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Choose Help → Check for updates and restart the app after installing.\n2. Sign out and back in. This refreshes the sync session without touching local files.\n3. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n4. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -1150,7 +1148,8 @@
           "unresolved_questions": [
             "What does Trust & Safety need to verify or do? KB-103 says: \"Always escalate suspected compromise to Trust & Safety, even if the customer has already changed their password.\""
           ],
-          "suggested_next_step": "Always escalate suspected compromise to Trust & Safety, even if the customer has already changed their password. Do not troubleshoot, restore files, or confirm account details in the reply."
+          "suggested_next_step": "Always escalate suspected compromise to Trust & Safety, even if the customer has already changed their password. Do not troubleshoot, restore files, or confirm account details in the reply.",
+          "prepared_by": "Lily, the AI support assistant"
         }
       },
       "baseline": {
@@ -1190,7 +1189,7 @@
           "Top match KB-103 (12.8) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Devon,\n\nThanks for getting in touch. Here's what to do:\n\n1. Change the password now. If the customer can still sign in, they should change their password from Settings → Security.\n2. Sign out of all sessions. Settings → Security → Sessions → \"Sign out everywhere\" ends every active session.\n\nThese steps come from our guide \"Suspicious sign-in activity or a compromised account\" (KB-103). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Devon,\n\nThanks for getting in touch. Here's what to do:\n\n1. Change the password now. If the customer can still sign in, they should change their password from Settings → Security.\n2. Sign out of all sessions. Settings → Security → Sessions → \"Sign out everywhere\" ends every active session.\n\nThese steps come from our guide \"Suspicious sign-in activity or a compromised account\" (KB-103). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     },
@@ -1289,7 +1288,7 @@
           "Top match KB-202 (9.3) >= 7.5",
           "=> resolve (supported_fix)"
         ],
-        "reply": "Hi Sofia,\n\nThanks for getting in touch. Here's what to do:\n\n1. Confirm the invoice number. Invoice numbers look like INV-123456 and are listed under Settings → Billing → Invoices.\n2. Request the refund. Next to the invoice, choose \"Request refund\". Requests inside the refund window are approved automatically.\n3. Allow 5–10 business days. The refund appears on the statement within 5–10 business days, depending on the bank.\n\nThese steps come from our guide \"Refunds for subscription charges\" (KB-202). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
+        "reply": "Hi Sofia,\n\nThanks for getting in touch. Here's what to do:\n\n1. Confirm the invoice number. Invoice numbers look like INV-123456 and are listed under Settings → Billing → Invoices.\n2. Request the refund. Next to the invoice, choose \"Request refund\". Requests inside the refund window are approved automatically.\n3. Allow 5–10 business days. The refund appears on the statement within 5–10 business days, depending on the bank.\n\nThese steps come from our guide \"Refunds for subscription charges\" (KB-202). If they don't solve the problem, reply here and tell us what you see.\n\nBaseline responder (for comparison only)",
         "handoff": null
       }
     }

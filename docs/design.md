@@ -29,23 +29,25 @@ analysis step, with structured output.
   example, search the KB again with better words). That is the natural next
   step if retrieval turns out to be the bottleneck (see C25).
 
-## 3. The investigator checks everything the analyzer claims
+## 3. The investigator checks what the analyzer claims
 
 `lily/investigator.py` gathers evidence from three sources (KB search, the
-ticket thread through the analyzer, the status page) and drops any claim it
-cannot verify:
+ticket thread through the analyzer, the status page) and drops any claim that
+fails one of these checks:
 
 | Claim | Check |
 |---|---|
 | "Article X is relevant" | X must be among the articles the search returned |
 | "This sentence supports the fix" | the quote must appear verbatim in X |
 | "The customer gave detail D" | D must appear in the customer's own messages |
-| "The customer tried step N" | step N must exist in a relevant article |
+| "The customer tried step N" | step N must exist in a relevant article, and the quote showing it must appear in the customer's messages |
 
 Every dropped claim is written to the investigation log, which appears in each
 transcript. A resolution also needs at least one verified quote from the
 article it cites (rule 8), so an answer the KB does not support becomes an
-escalation instead.
+escalation instead. Some judgements can't be checked this way, such as whether
+an article is truly relevant or whether two articles really conflict for this
+customer. Those depend on the analyzer.
 
 ## 4. Ordered rules, with a trace
 
@@ -63,8 +65,11 @@ is generated freely. Every reply ends with Lily's signature, which says it comes
 from an AI assistant, and every handoff says Lily prepared it.
 
 - **Why:** every instruction can be traced to a source. A ticket that contains
-  instructions aimed at the model (prompt injection) cannot change what the
-  customer receives, only how the facts are read, and those facts are checked.
+  instructions aimed at the model (prompt injection) cannot make Lily send text
+  that isn't a template, a KB step or a status-page message. It could still
+  change *which* of those is chosen, for example by getting a model to report a
+  conflict or a relevant article that isn't real, because those judgements
+  can't be checked like quotes. This has not been tested with attack tickets.
 - **Cost:** replies are correct but plain. A natural next step is letting Claude
   rewrite the template for tone, with the same steps and a check that no new
   instructions appear.

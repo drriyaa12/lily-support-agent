@@ -18,6 +18,7 @@ DEFAULT_QUEUE = "Tier 2 Support"
 
 # Every reply is signed, and says plainly that it comes from an AI assistant.
 SIGNATURE = "Lily\nQuillstack's AI support assistant"
+PREPARED_BY = "Lily, the AI support assistant"
 
 HOW_LABELS = {
     "customer_reported": "customer says they tried it",
@@ -40,6 +41,7 @@ class Handoff:
     evidence_checked: List[str] = field(default_factory=list)
     unresolved_questions: List[str] = field(default_factory=list)
     suggested_next_step: str = ""
+    prepared_by: str = PREPARED_BY
 
     def to_markdown(self) -> str:
         def bullets(items, empty="None."):
@@ -48,7 +50,7 @@ class Handoff:
         details = [f"{k}: {v}" for k, v in self.details_provided.items()]
         return "\n".join([
             f"### Handoff for {self.ticket_id} → {self.queue}",
-            "*Prepared by Lily, the AI support assistant, for a human colleague.*",
+            f"*Prepared by {self.prepared_by}, for a human colleague.*",
             f"**Why escalated:** `{self.reason}`: {self.explanation}",
             f"**Customer:** {self.customer}",
             f"**Summary:** {self.summary}",
@@ -69,8 +71,8 @@ def _numbered(steps) -> str:
     return "\n".join(f"{i}. {s.title}. {s.detail}" for i, s in enumerate(steps, start=1))
 
 
-def compose_reply(decision: Decision, inv: Investigation) -> str:
-    return _body(decision, inv) + "\n\n" + SIGNATURE
+def compose_reply(decision: Decision, inv: Investigation, signature: str = SIGNATURE) -> str:
+    return _body(decision, inv) + "\n\n" + signature
 
 
 def _body(decision: Decision, inv: Investigation) -> str:
@@ -162,7 +164,7 @@ def _next_step(decision: Decision) -> str:
     return "Review the ticket manually and reply to the customer."
 
 
-def build_handoff(decision: Decision, inv: Investigation) -> Handoff:
+def build_handoff(decision: Decision, inv: Investigation, prepared_by: str = PREPARED_BY) -> Handoff:
     ticket = inv.ticket
     attempted = []
     for a in inv.attempted:
@@ -192,4 +194,5 @@ def build_handoff(decision: Decision, inv: Investigation) -> Handoff:
         evidence_checked=checked,
         unresolved_questions=_questions(decision, inv),
         suggested_next_step=_next_step(decision),
+        prepared_by=prepared_by,
     )

@@ -28,14 +28,21 @@ Python 3.9+ and the standard library only. No install step.
 ```bash
 git clone https://github.com/drriyaa12/lily-support-agent.git
 cd lily-support-agent
-python3 -m unittest discover -s tests -t .    # 123 tests
-python3 -m lily run C17                       # one ticket, full transcript
-python3 -m lily eval                          # Lily vs the baseline on the 26 development cases
+python3 -m unittest discover -s tests -t .
+python3 -m lily run C17
+python3 -m lily eval
 ```
 
+The first command runs the tests, the second prints one ticket's full
+transcript, and the third compares Lily with the baseline on the 26 development
+cases.
+
 `run` takes a case ID from `eval/cases.json` or `eval/heldout_cases.json`, or a
-path to a ticket JSON file. Add `--baseline` to see the baseline's answer, or
-`--json` for machine-readable output.
+path to a ticket JSON file. A ticket file has the same shape as a `ticket` in
+`eval/cases.json`: `id`, `created_at` (ISO 8601), `customer` (`name`, `plan`),
+`channel`, `subject`, and `messages`, a list of
+`{"role": "customer" or "agent", "text": "..."}`. Add `--baseline` to see the
+baseline's answer, or `--json` for machine-readable output.
 
 ## Optional: Claude as the analyzer
 
@@ -46,18 +53,23 @@ it stays the same. It needs Python 3.10+ and an Anthropic API key.
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-claude.txt
-cp .env.example .env              # put your key in .env (git-ignored)
-set -a; source .env; set +a       # exports it for this shell
-
+cp .env.example .env
+set -a; source .env; set +a
 python3 -m lily run C25 --analyzer claude
-python3 -m lily eval --analyzer claude     # writes results/claude-dev/, including every raw model output
-python3 -m lily eval --analyzer replay --replay-dir results/claude-dev/raw   # re-score saved outputs, no API calls
+python3 -m lily eval --analyzer claude
+python3 -m lily eval --analyzer replay --replay-dir results/claude-dev/raw
 ```
+
+Put your key in `.env`, which is git-ignored. `set -a; source .env; set +a`
+exports it for the current shell. `eval --analyzer claude` writes
+`results/claude-dev/`, including every raw model output, and
+`--analyzer replay` re-scores those saved outputs without calling the API.
 
 The Anthropic SDK finds the credential itself (`ANTHROPIC_API_KEY`,
 `ANTHROPIC_AUTH_TOKEN`, or an `ant auth login` profile). Lily never logs or
-stores it, and saved raw outputs contain only the model's JSON, token counts,
-stop reason and any error message. A network error, rate limit or server error
+stores it. A saved raw output holds the ticket ID, the model and effort, the
+stop reason, token counts, the model's JSON and any error message, and never a
+credential or request header. A network error, rate limit or server error
 that persists after the SDK's own retries is recorded as an analysis error for
 that ticket, and the run continues. `SUPPORT_AGENT_MODEL` and
 `SUPPORT_AGENT_EFFORT` override the model (default `claude-opus-5-5`) and effort
@@ -91,7 +103,7 @@ Lily has two parts that run one after the other. The **investigator** gathers
 evidence and checks it. The **decision policy** decides what to do and writes
 the reply or handoff. The key design choice: **the analyzer reports facts, and
 plain code makes the decision.** Whether the facts come from rules or from
-Claude, the investigator drops anything it can't verify, and a fixed set of
+Claude, the investigator drops claims that fail its checks, and a fixed set of
 rules decides what the customer is told. That keeps every decision explainable
 (each transcript shows the rule trace) and keeps a model mistake from turning
 into an invented instruction. The reasoning behind each choice is in
@@ -108,7 +120,7 @@ into an invented instruction. The reasoning behind each choice is in
 | `lily/respond.py` | Customer reply templates, Lily's signature and the human handoff |
 | `lily/baseline.py` | The comparison baseline |
 | `lily/evaluate.py` | Scoring, metrics and the Markdown report |
-| `lily/settings.py` | Every tunable number, and how it was chosen |
+| `lily/settings.py` | The decision thresholds, and how they were chosen |
 
 ## How a decision is made
 
@@ -209,9 +221,11 @@ labelled attempt and invents none. Full definitions are at the bottom of each
 **Reproduce:**
 
 ```bash
-python3 -m lily eval                                   # → results/heuristic-dev/
-python3 -m lily eval --cases eval/heldout_cases.json   # → results/heuristic-heldout/
+python3 -m lily eval
+python3 -m lily eval --cases eval/heldout_cases.json
 ```
+
+The first writes `results/heuristic-dev/`, the second `results/heuristic-heldout/`.
 
 ## Results
 
@@ -240,37 +254,49 @@ same assistant wrote the cases and Lily.
 ### Held-out set (10 cases, never used for tuning)
 
 From [`results/heuristic-heldout/summary.md`](results/heuristic-heldout/summary.md).
-The first run used the code exactly as it was before the held-out cases existed
-([kept here](results/heldout-first-run/NOTE.md)). The review fixes that followed
-changed no held-out decision; this was checked case by case.
+The first run used the code as committed in `90af606`
+([kept here](results/heldout-first-run/NOTE.md)). That this code was written
+before the held-out cases is our account; the git history can't show it. The
+first round of review fixes changed no held-out decision (checked case by case).
+The second round changed one outcome, H01, explained below.
 
 | Metric | Lily | Baseline |
 |---|---|---|
 | Correct decision | **6/10** | 3/10 |
-| Correct resolutions | 3 of 3 | 1 of 3 |
-| Incorrect resolutions | 2 | 8 |
+| Correct resolutions | 2 of 3 | 1 of 3 |
+| Incorrect resolutions | 3 | 8 |
 | Appropriate escalations | 2 of 5 | 0 of 5 |
 | Unnecessary escalations | 1 | 1 |
 | Missed escalations (asked instead of escalating) | 1 | 0 |
 | Correct clarifying questions | 1 of 2 | 0 of 2 |
-| Resolutions that repeated a step already tried | 1 | 6 |
+| Resolutions that repeated a step already tried | 2 | 6 |
 
 **This is the honest number.** Lily drops from 96% on the cases it was tuned
 on to 60% on new ones. It still doubles the baseline, but the offline rules
-don't generalise well. The four misses:
+don't generalise well. The four wrong decisions:
 
 - **H05:** a vague ticket (subject: "Problems since office move") was longer than
   the rule's 7-word limit for "too vague", so Lily escalated instead of asking
   what's wrong.
-- **H06:** keyword search surfaced only one of the two articles that disagree about who
-  can remove members, so Lily couldn't see the conflict and answered from the one
-  it found.
+- **H06:** keyword search ranked the "only owners can remove members" article
+  second, but below the relevance threshold, so only one of the two conflicting
+  articles counted. Even with both, the conflict rule needs the ticket to mention
+  at least two of "remove", "member" and "role", and this ticket only says
+  "remove him", so Lily would still have answered from one article.
 - **H08:** in a three-message thread, Lily recognised three of the four steps the
   customer had done and sent the fourth (reinstall) again.
 - **H10:** a request for VAT details on invoices matched the refund article on
   "invoice" (the C25 failure again), so Lily asked for an invoice number.
 
-All four are limitations of word matching. They are where the Claude analyzer is
+And one right decision with a wrong reply:
+
+- **H01:** the customer had already opened billing settings and swapped in a new
+  card. Lily recognised the first step but not the second ("swapped in our new
+  card" doesn't match "Replace the card"), so its reply asks them to replace the
+  card again. Before the second review, a misreading of the word "without" hid
+  this, and the reply scored as correct by accident.
+
+All five are limitations of word matching. They are where the Claude analyzer is
 meant to help, but that is untested. These held-out cases have now been inspected,
 so any future change should be checked against a fresh set.
 
@@ -278,38 +304,47 @@ so any future change should be checked against a fresh set.
 
 | Behaviour | Status |
 |---|---|
-| Resolves routine tickets with KB steps, citing the article | Measured: dev 10/10, held-out 3/3 |
-| Skips steps already tried; escalates when all have failed | Measured: dev all correct; one held-out miss (H08) |
+| Resolves when it should (KB steps or an incident notice) | Measured: dev 10/10, held-out 2/3 (H01 re-sends a step) |
+| Skips steps already tried; escalates when all have failed | Measured: dev all correct; held-out misses H01 and H08 |
 | Asks for missing details instead of guessing | Measured: dev 5/5, held-out 1/2 |
-| Escalates on policy, missing coverage, conflicts that matter | Measured: dev 10/11, held-out 2/5 |
-| Drops invented quotes, unretrieved articles, details not in the ticket | Unit-tested (`tests/test_investigator.py`, `tests/test_claude_analyzer.py`) |
+| Escalates on policy, missing coverage and conflicts that matter | Measured: dev 6/7, held-out 1/3 |
+| Drops invented quotes, unretrieved articles, details not in the ticket, and attempted steps whose quote isn't in the ticket | Unit-tested (`tests/test_investigator.py`, `tests/test_claude_analyzer.py`) |
 | Claude analyzer improves on the offline analyzer | **Intended, not measured** |
-| Resists instructions hidden in tickets (prompt injection) | **Intended by design** (replies are templated, claims verified); not tested with attack cases |
+| Resists instructions hidden in tickets (prompt injection) | **Intended by design**, not tested with attack tickets. A ticket can't make Lily send text that isn't a template, KB step or status message, but it could still change which of those is chosen. |
 
 ## Pre-publish review
 
 Before publishing, a Claude Code workflow ran 50 agents over the repository.
 Four reviewers covered correctness, evaluation integrity, Claude API usage and
 confidentiality. Skeptic agents tried to refute each finding, with three
-skeptics for high-severity ones. Of 41 findings, **27 were confirmed** and fixed,
-each with a regression test, and 14 were refuted. The most serious: phrases
-like "I need to…" were read as "I already tried…", so Lily could skip a step and
-thank the customer for it. Other fixes made the scoring stricter (above) and
-corrected one development label (C22). The fixes hardened Lily against inputs
-the review found and changed no measured decision. Details are in
-[`docs/claude-code-assistance.md`](docs/claude-code-assistance.md).
+skeptics for high-severity ones. Of 41 findings, 27 were confirmed and 14
+refuted. All 27 were addressed (two only partly), and every code fix has a
+regression test. The most serious: phrases like "I need to…" were read as "I
+already tried…", so Lily could skip a step and thank the customer for it. Other
+fixes made the scoring stricter (above) and corrected one development label
+(C22). These fixes changed no measured decision.
+
+A second workflow of 40 agents then re-checked the finished repository. It
+compared every docs claim with the results, reproduced everything from a fresh
+copy, reviewed the fixes for new bugs and re-checked confidentiality. It
+confirmed 27 more findings and refuted 5. The confirmed ones include a regression
+the first fixes had introduced (a question mark hid reported attempts) and the
+H01 misreading above. They were fixed the same way, except one that needs the
+repository owner (a personal email address in one GitHub merge commit). Details
+are in [`docs/claude-code-assistance.md`](docs/claude-code-assistance.md).
 
 ## Limitations
 
 - **Tiny, self-made dataset.** 36 fictional tickets written by AI agents, 26 of
   them by the same assistant that wrote Lily. The development set was used for
   tuning.
-- **Keyword retrieval.** BM25 matches words, not meaning (C25, H10), and a conflict
-  can only be detected between articles it surfaces (H06). The threshold was
-  tuned on the development set.
+- **Keyword retrieval.** BM25 matches words, not meaning (C25, H10). A conflict
+  can only be detected between articles that clear the relevance threshold, and
+  only when the ticket mentions what the conflict is about (H06). The threshold
+  was tuned on the development set.
 - **Brittle offline analyzer.** Attempted steps are detected with phrase rules
   ("I already…", "I've updated…", "I don't have…"), and "too vague" is a word
-  count. Paraphrases and long-but-vague tickets are missed (H05, H08).
+  count. Paraphrases and long-but-vague tickets are missed (H01, H05, H08).
 - **Offline summaries are extracts.** Without Claude, the "summary" is the
   customer's first sentences and the "core issue" is the subject plus the
   closest article's title.
@@ -329,7 +364,7 @@ the review found and changed no measured decision. Details are in
 
 ```text
 lily/                         Lily (standard library only; claude_analyzer.py uses the anthropic SDK)
-tests/                        123 unit and integration tests
+tests/                        unit and integration tests
 data/kb/                      17 fictional KB articles (Markdown + front matter)
 data/status.json              fictional status page
 eval/                         development cases, held-out cases, labelling guide
@@ -346,3 +381,7 @@ data and the development labels, ran the tests and the evaluations, and
 reviewed every transcript. Separate agents wrote and audited the held-out cases
 and reviewed the code before publishing. What was and wasn't verified is listed in
 [`docs/claude-code-assistance.md`](docs/claude-code-assistance.md).
+
+## License
+
+[MIT](LICENSE). Copyright (c) 2026 drriyaa12. This covers the code and the fictional data (knowledge base, tickets and status page).
