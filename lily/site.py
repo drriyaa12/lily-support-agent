@@ -58,6 +58,7 @@ def build_site_data(root: Path) -> dict:
                     "reason": lily.decision.reason,
                     "explanation": lily.decision.explanation,
                     "outcome": lily_row["outcome"],
+                    "right_decision": lily_row["decision_match"],
                     "good": lily_row["outcome"] in GOOD,
                     "note": lily_row["note"],
                     "cited": lily.cited_sources,
@@ -76,6 +77,7 @@ def build_site_data(root: Path) -> dict:
                     "reason": base.decision.reason,
                     "explanation": base.decision.explanation,
                     "outcome": base_row["outcome"],
+                    "right_decision": base_row["decision_match"],
                     "good": base_row["outcome"] in GOOD,
                     "note": base_row["note"],
                     "reply": base.reply,
@@ -112,7 +114,7 @@ PAGE = r"""<!doctype html>
 <style>
 :root {
   --paper: #f3f6f4; --surface: #ffffff; --ink: #17241f; --muted: #55635d; --line: #cbd5d0;
-  --resolve: #2e7a50; --clarify: #a66a00; --escalate: #b3263e; --focus: #1f5fbf;
+  --resolve: #2a7049; --clarify: #8f5a00; --escalate: #b3263e; --focus: #1f5fbf;
   --resolve-tint: #e1f0e7; --clarify-tint: #f6ead3; --escalate-tint: #f5dfe3; --hover: #e8eeea;
   --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "Atkinson Hyperlegible Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -135,7 +137,7 @@ a { color: inherit; text-underline-offset: 3px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .masthead { padding: 40px 0 28px; }
-.masthead .top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.masthead .top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; }
 .masthead h1 { font-size: clamp(3rem, 9vw, 4.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 0.95; margin: 0; }
 .masthead .top a { font-weight: 600; white-space: nowrap; }
 .lede { font-size: 1.3rem; line-height: 1.45; max-width: 34rem; margin: 18px 0 0; }
@@ -152,7 +154,10 @@ h3 { font-size: 1.15rem; margin: 28px 0 8px; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.92rem; color: var(--muted); margin: 0 0 10px; }
 .legend span { display: inline-flex; align-items: center; gap: 7px; }
-.swatch { width: 22px; height: 16px; border-radius: 4px; background: var(--resolve-tint); border: 1px solid var(--line); }
+.swatch { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.swatch b { width: 9px; height: 16px; }
+.swatch .r { background: var(--resolve-tint); } .swatch .c { background: var(--clarify-tint); } .swatch .e { background: var(--escalate-tint); }
+.back { display: none; font: inherit; font-weight: 600; margin-top: 22px; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; color: var(--ink); cursor: pointer; }
 
 table.lanes { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .lanes th, .lanes td { padding: 0; border-bottom: 1px solid var(--line); }
@@ -220,6 +225,7 @@ summary { cursor: pointer; font-weight: 600; }
 @media (max-width: 960px) {
   .layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .story { position: static; max-height: none; overflow: visible; padding: 20px 18px 24px; }
+  .back { display: inline-block; }
 }
 @media (max-width: 520px) {
   body { font-size: 16px; }
@@ -253,7 +259,8 @@ summary { cursor: pointer; font-weight: 600; }
     <p class="legend" aria-hidden="true">
       <span><i class="m-lily"></i>Lily's decision</span>
       <span><i class="m-base"></i>Baseline's decision</span>
-      <span><i class="swatch"></i>The correct decision</span>
+      <span><i class="swatch"><b class="r"></b><b class="c"></b><b class="e"></b></i>The correct decision (its lane is tinted)</span>
+      <span><b class="mark warn">✓</b>Right decision, flawed reply</span>
     </p>
     <table class="lanes">
       <caption class="sr">Each row is a ticket. The tinted lane is the correct decision; the dot is Lily's decision and the square is the baseline's.</caption>
@@ -261,7 +268,8 @@ summary { cursor: pointer; font-weight: 600; }
       <tbody id="rows"></tbody>
     </table>
   </section>
-  <section class="story" id="story" aria-live="polite" tabindex="-1"></section>
+  <section class="story" id="story" tabindex="-1"></section>
+  <p class="sr" id="status" aria-live="polite"></p>
 </main>
 
 <footer class="wrap foot">
@@ -306,8 +314,9 @@ summary { cursor: pointer; font-weight: 600; }
     return node;
   }
   function verdict(sys) {
-    if (sys.good) return { mark: "✓", cls: "ok", words: "right" };
-    return { mark: "✗", cls: "bad", words: "wrong" };
+    if (!sys.right_decision) return { mark: "✗", cls: "bad", words: "wrong decision" };
+    if (!sys.good) return { mark: "✓", cls: "warn", words: "right decision, flawed reply" };
+    return { mark: "✓", cls: "ok", words: "right decision" };
   }
   function articleLabel(id) { return data.articles[id] ? id + " (" + data.articles[id] + ")" : id; }
 
@@ -331,13 +340,13 @@ summary { cursor: pointer; font-weight: 600; }
     });
   }
   segmented(document.getElementById("set-filter"), "set", [["all", "All " + data.cases.length], ["development", "Development " + dev.n], ["held-out", "Held-out " + held.n]]);
-  segmented(document.getElementById("miss-filter"), "show", [["all", "All"], ["lily", "Lily wrong"], ["baseline", "Baseline wrong"]]);
+  segmented(document.getElementById("miss-filter"), "show", [["all", "All"], ["lily", "Lily's wrong decisions"], ["baseline", "Baseline's wrong decisions"]]);
 
   function visible() {
     return data.cases.filter(function (c) {
       if (state.set !== "all" && c.set !== state.set) return false;
-      if (state.show === "lily") return !c.lily.good;
-      if (state.show === "baseline") return !c.baseline.good;
+      if (state.show === "lily") return !c.lily.right_decision;
+      if (state.show === "baseline") return !c.baseline.right_decision;
       return true;
     });
   }
@@ -358,14 +367,14 @@ summary { cursor: pointer; font-weight: 600; }
         el("span", { class: "mark " + lv.cls, "aria-hidden": "true", text: lv.mark }),
         el("span", { class: "sr", text: ". Correct: " + c.expected.decision + ". Lily: " + NAMES[c.lily.action] + ", " + lv.words +
           ". Baseline: " + NAMES[c.baseline.action] + ", " + verdict(c.baseline).words + "." }));
-      button.addEventListener("click", function () { select(c.id, true); });
+      button.addEventListener("click", function () { select(c.id, "user"); });
       var row = el("tr", { class: "row" + (c.id === state.selected ? " selected" : ""), "data-id": c.id }, el("th", { scope: "row" }, button));
       LANES.forEach(function (lane) {
         var dots = el("span", { class: "dots", "aria-hidden": "true" },
           c.lily.action === lane ? el("i", { class: "m-lily" }) : null,
           c.baseline.action === lane ? el("i", { class: "m-base" }) : null);
         var cell = el("td", { class: "lane " + lane + (c.expected.decision === lane ? " expected" : "") }, dots);
-        cell.addEventListener("click", function () { select(c.id, true); });
+        cell.addEventListener("click", function () { select(c.id, "user"); });
         row.appendChild(cell);
       });
       body.appendChild(row);
@@ -461,9 +470,18 @@ summary { cursor: pointer; font-weight: 600; }
     var more = el("details", null, el("summary", { text: "Show the baseline's reply" }), el("div", { class: "reply", text: c.baseline.reply }));
     b.appendChild(more);
     story.appendChild(b);
+
+    var back = el("button", { type: "button", class: "back", text: "Back to the list" });
+    back.addEventListener("click", function () {
+      var row = document.querySelector('tr.row[data-id="' + c.id + '"] button');
+      if (row) { row.scrollIntoView({ block: "center" }); row.focus(); }
+      else document.getElementById("board-title").scrollIntoView();
+    });
+    story.appendChild(back);
   }
 
-  function select(id, fromUser) {
+  // how: "user" (a click or key press), "link" (a #ticket link), or "start" (the default ticket on load)
+  function select(id, how) {
     var c = data.cases.filter(function (x) { return x.id === id; })[0];
     if (!c) return;
     state.selected = id;
@@ -473,21 +491,26 @@ summary { cursor: pointer; font-weight: 600; }
       row.querySelector("button").setAttribute("aria-pressed", String(on));
     });
     renderStory(c);
-    if (fromUser) {
-      if (history.replaceState) history.replaceState(null, "", "#" + id);
-      if (window.matchMedia("(max-width: 960px)").matches) document.getElementById("story").scrollIntoView({ block: "start" });
+    if (how === "start") return;
+    document.getElementById("status").textContent = "Showing " + c.id + ": " + c.subject;
+    if (how === "user" && history.replaceState) history.replaceState(null, "", "#" + id);
+    if (window.matchMedia("(max-width: 960px)").matches) {
+      var story = document.getElementById("story");
+      story.scrollIntoView({ block: "start" });
+      if (how === "user") story.focus({ preventScroll: true });
     }
   }
 
   window.addEventListener("hashchange", function () {
     var id = (location.hash || "").slice(1);
-    if (id && id !== state.selected) select(id, false);
+    if (id && id !== state.selected) select(id, "link");
   });
 
   var initial = (location.hash || "").slice(1);
-  state.selected = data.cases.some(function (c) { return c.id === initial; }) ? initial : "C18";
+  var linked = data.cases.some(function (c) { return c.id === initial; });
+  state.selected = linked ? initial : "C18";
   renderRows();
-  select(state.selected, false);
+  select(state.selected, linked ? "link" : "start");
 })();
 </script>
 </body>

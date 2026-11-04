@@ -79,5 +79,11 @@ class TraceTests(unittest.TestCase):
         self.assertIn("not applied", d.trace[2])
 
 
+class ResolutionTraceTests(unittest.TestCase):
+    def test_a_resolution_names_the_rule_that_decided_it(self):
+        d = decide(investigation([article()]))
+        self.assertTrue(d.trace[-2].startswith("9."), d.trace[-2])
+
+
 if __name__ == "__main__":
     unittest.main()

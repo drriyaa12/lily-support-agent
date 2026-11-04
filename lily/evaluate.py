@@ -278,6 +278,6 @@ def build_meta(cases_path: Path, analyzer_name: str, analyzer_description: str, 
         "analyzer": analyzer_name,
         "analyzer_description": analyzer_description,
         "cases_file": str(cases_path),
-        "cases_sha256": hashlib.sha256(data).hexdigest(),
+        "cases_sha256": hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest(),  # same on any checkout
         "n_cases": len(json.loads(data)),
     }

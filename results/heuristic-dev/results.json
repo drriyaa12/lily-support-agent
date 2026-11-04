@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-11-04 21:13 UTC",
+    "generated": "2026-11-04 21:23 UTC",
     "command": "python3 -m lily eval",
     "split": "development",
     "analyzer": "heuristic",
@@ -192,6 +192,7 @@
           "6. Required details missing for KB-101? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3, 4]",
           "8. Verified quote from KB-101? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Priya,\n\nThanks for getting in touch. Here's what to do:\n\n1. Request a reset link. On the sign-in page, choose \"Forgot password?\" and enter the email address on the account.\n2. Check spam and filters. Reset emails come from no-reply@quillstack.example and can be caught by spam folders or company mail filters.\n3. Use the newest link within 30 minutes. Each new request cancels earlier links, and a link expires 30 minutes after it is sent.\n4. Try a private browser window. Browser extensions sometimes block the reset page from loading.\n\nThese steps come from our guide \"Resetting your password\" (KB-101). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -291,6 +292,7 @@
           "6. Required details missing for KB-201? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-201? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Marco,\n\nThanks for getting in touch. Here's what to do:\n\n1. Open billing settings. Go to Settings → Billing. Only the workspace owner can see this page.\n2. Replace the card. Choose \"Update payment method\", enter the new card and save.\n3. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -389,6 +391,7 @@
           "6. Required details missing for KB-204? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-204? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Aiko,\n\nThanks for getting in touch. Here's what to do:\n\n1. Open the plan page. Go to Settings → Billing → Plan.\n2. Choose the new plan or cancel. Select a smaller plan, or choose \"Cancel subscription\" to move to Free at the end of the period.\n3. Check the confirmation email. Owners receive an email with the date the change takes effect.\n\nThese steps come from our guide \"Cancelling or downgrading your plan\" (KB-204). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -487,6 +490,7 @@
           "6. Required details missing for KB-401? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-401? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Tomás,\n\nThanks for getting in touch. Here's what to do:\n\n1. Start the export. Go to Settings → Workspace → Export data and choose \"Create export\".\n2. Wait for the email. Large workspaces can take up to 24 hours. An email arrives when the archive is ready.\n3. Download within 7 days. The download link in the email expires after 7 days.\n\nThese steps come from our guide \"Exporting your workspace data\" (KB-401). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -585,6 +589,7 @@
           "6. Required details missing for KB-301? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-301? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Dev,\n\nThanks for getting in touch. Here's what to do:\n\n1. Check spam and quarantine. Ask the invited person to search their inbox, spam folder and any company quarantine for \"Quillstack\".\n2. Resend the invitation. In Members → Pending invitations, choose \"Resend\". Resending creates a new 7-day link.\n3. Check allowed email domains. If the workspace restricts sign-ups by domain (Settings → Security → Allowed domains), the invited address must use an allowed domain.\n\nThese steps come from our guide \"Team member did not receive an invitation\" (KB-301). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -684,6 +689,7 @@
           "6. Required details missing for KB-104? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3, 4]",
           "8. Verified quote from KB-104? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Sofia,\n\nThanks for getting in touch. Here's what to do:\n\n1. Update to the latest version. Choose Help → Check for updates and restart the app after installing.\n2. Sign out and back in. This refreshes the sync session without touching local files.\n3. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n4. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -783,6 +789,7 @@
           "6. Required details missing for KB-501? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-501? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Kwame,\n\nThanks for getting in touch. Here's what to do:\n\n1. Check the endpoint response. The endpoint must answer with a 2xx status code within 10 seconds. Redirects count as failures.\n2. Verify the signing secret. Make sure the endpoint validates signatures with the current secret from Developer settings → Webhooks.\n3. Re-enable the webhook. If the webhook shows \"Disabled\", choose \"Enable\". Failed events from the last 72 hours are retried.\n\nThese steps come from our guide \"Webhook deliveries are failing\" (KB-501). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -1722,6 +1729,7 @@
           "6. Required details missing for KB-202? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-202? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Zara,\n\nThanks for getting in touch. Here's what to do:\n\n1. Confirm the invoice number. Invoice numbers look like INV-123456 and are listed under Settings → Billing → Invoices.\n2. Request the refund. Next to the invoice, choose \"Request refund\". Requests inside the refund window are approved automatically.\n3. Allow 5–10 business days. The refund appears on the statement within 5–10 business days, depending on the bank.\n\nThese steps come from our guide \"Refunds for subscription charges\" (KB-202). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -2004,6 +2012,7 @@
           "6. Required details missing for KB-104? no",
           "7. Steps already tried or impossible: [1, 2]; remaining: [3, 4]",
           "8. Verified quote from KB-104? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Arjun,\n\nThanks for already trying these: update to the latest version, sign out and back in. The next steps are:\n\n1. Reset the local cache. Choose Settings → Advanced → Reset local cache. Files stay safe in the cloud, and the app downloads them again.\n2. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -2928,6 +2937,7 @@
           "6. Required details missing for KB-202? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-202? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Ingrid,\n\nThanks for getting in touch. Here's what to do:\n\n1. Confirm the invoice number. Invoice numbers look like INV-123456 and are listed under Settings → Billing → Invoices.\n2. Request the refund. Next to the invoice, choose \"Request refund\". Requests inside the refund window are approved automatically.\n3. Allow 5–10 business days. The refund appears on the statement within 5–10 business days, depending on the bank.\n\nThese steps come from our guide \"Refunds for subscription charges\" (KB-202). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",

@@ -1,9 +1,10 @@
 """Check that the published results and demo page are exactly what the code produces now.
 
-`python3 -m lily verify` re-runs both offline evaluations in a temporary folder and compares them with
-the committed `results/`, ignoring only when and how they were generated, and rebuilds the demo page to
-compare it with `docs/index.html`. CI runs it on every change, so a published number can never quietly
-drift away from the code.
+`python3 -m lily verify` re-runs both offline evaluations in a temporary folder and compares every file it
+writes (results.json, summary.md and each transcript) with the committed `results/`, and rebuilds the demo
+page to compare it with `docs/index.html`. Only the "generated at" stamp and the recorded command are
+carried over from the committed files. CI runs it on every push to main and every pull request. The
+README's tables are written by hand and are not checked here.
 """
 from __future__ import annotations
 
@@ -42,6 +43,21 @@ def compare(committed: dict, fresh: dict) -> List[str]:
     return problems
 
 
+def _file_differences(published_dir: Path, fresh_dir: Path):
+    """(relative path, reason) for every generated file that is missing, extra or different."""
+    def files(folder):
+        return {p.relative_to(folder).as_posix() for p in folder.rglob("*") if p.is_file() and p.name != ".DS_Store"}
+
+    published, fresh = files(published_dir), files(fresh_dir)
+    for name in sorted(fresh - published):
+        yield name, " is missing from the published results"
+    for name in sorted(published - fresh):
+        yield name, " is published but no longer generated"
+    for name in sorted(published & fresh):
+        if (published_dir / name).read_bytes().replace(b"\r\n", b"\n") != (fresh_dir / name).read_bytes():
+            yield name, " differs from what the code produces now"
+
+
 def verify(root: Path) -> List[str]:
     """Re-run the offline evaluations and list every difference from the committed results."""
     from lily.agent import build_agent, build_baseline
@@ -56,11 +72,16 @@ def verify(root: Path) -> List[str]:
                 problems.append(f"{results_dir}/results.json is missing")
                 continue
             out = Path(tmp) / Path(results_dir).name
-            meta = build_meta(root / cases_file, "heuristic", "offline heuristic analyzer (no API calls)", "verify")
-            run_evaluation(load_cases(root / cases_file), build_agent(HeuristicAnalyzer()), build_baseline(), out, meta)
-            fresh = json.loads((out / "results.json").read_text(encoding="utf-8"))
             published = json.loads(published_path.read_text(encoding="utf-8"))
+            meta = build_meta(root / cases_file, "heuristic", "offline heuristic analyzer (no API calls)", "verify")
+            for key in ("generated", "command", "cases_file"):  # how and when, not what
+                meta[key] = published["meta"].get(key, meta[key])
+            data_dir = root / "data"
+            run_evaluation(load_cases(root / cases_file), build_agent(HeuristicAnalyzer(), data_dir),
+                           build_baseline(data_dir), out, meta)
+            fresh = json.loads((out / "results.json").read_text(encoding="utf-8"))
             problems += [f"{results_dir}: {p}" for p in compare(published, fresh)]
+            problems += [f"{results_dir}/{name}" + why for name, why in _file_differences(root / results_dir, out)]
 
     from lily.site import SITE_PATH, build_site_data, render_site
 

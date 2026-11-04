@@ -48,5 +48,29 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(published, render_site(build_site_data(ROOT)), "run: python3 -m lily site")
 
 
+class VerdictTests(unittest.TestCase):
+    """Review finding: the page counted decisions in its headline but judged replies in its rows."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.data = build_site_data(ROOT)
+
+    def case(self, case_id):
+        return next(c for c in self.data["cases"] if c["id"] == case_id)
+
+    def test_a_right_decision_with_a_flawed_reply_is_marked_as_such(self):
+        baseline = self.case("C18")["baseline"]
+        self.assertEqual((baseline["right_decision"], baseline["good"]), (True, False))
+        self.assertFalse(self.case("C25")["lily"]["right_decision"])
+
+    def test_headline_counts_the_same_verdicts_the_rows_show(self):
+        for split in ("development", "held-out"):
+            cases = [c for c in self.data["cases"] if c["set"] == split]
+            with self.subTest(split=split):
+                self.assertEqual(self.data["sets"][split]["lily_correct"], sum(c["lily"]["right_decision"] for c in cases))
+                self.assertEqual(self.data["sets"][split]["baseline_correct"],
+                                 sum(c["baseline"]["right_decision"] for c in cases))
+
+
 if __name__ == "__main__":
     unittest.main()

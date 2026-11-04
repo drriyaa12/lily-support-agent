@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-11-04 21:13 UTC",
+    "generated": "2026-11-04 21:23 UTC",
     "command": "python3 -m lily eval --cases eval/heldout_cases.json",
     "split": "held-out",
     "analyzer": "heuristic",
@@ -206,6 +206,7 @@
           "6. Required details missing for KB-201? no",
           "7. Steps already tried or impossible: [1]; remaining: [2, 3]",
           "8. Verified quote from KB-201? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Ines,\n\nThanks for already trying these: open billing settings. The next steps are:\n\n1. Replace the card. Choose \"Update payment method\", enter the new card and save.\n2. Retry the failed payment. Choose \"Retry payment\" on the open invoice. The retry usually completes within a few minutes.\n\nThese steps come from our guide \"Updating your payment method\" (KB-201). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -307,6 +308,7 @@
           "6. Required details missing for KB-105? no",
           "7. Steps already tried or impossible: none; remaining: [1, 2, 3]",
           "8. Verified quote from KB-105? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Kwame,\n\nThanks for getting in touch. Here's what to do:\n\n1. Check the file against the size limit. Paid plans accept files up to 250 MB; the Free plan accepts files up to 50 MB.\n2. Check the workspace storage quota. Settings → Usage shows how much storage is left. Uploads fail when the workspace is full.\n3. Upload large files from the desktop app. The desktop app resumes interrupted uploads; browser uploads restart from zero.\n\nThese steps come from our guide \"File uploads fail or stop partway\" (KB-105). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",
@@ -747,6 +749,7 @@
           "6. Required details missing for KB-303? no",
           "7. Steps already tried or impossible: none; remaining: none",
           "8. Verified quote from KB-303? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Jonas,\n\nThanks for getting in touch. From our guide \"Roles and permissions\" (KB-303):\n\n> Admins can invite and remove members and change workspace settings.\n\nIf that doesn't answer your question, reply here and we'll help.\n\nLily\nQuillstack's AI support assistant",
@@ -1012,6 +1015,7 @@
           "6. Required details missing for KB-104? no",
           "7. Steps already tried or impossible: [1, 2, 3]; remaining: [4]",
           "8. Verified quote from KB-104? yes",
+          "9. Otherwise: resolve with the steps not tried yet",
           "=> resolve (supported_fix)"
         ],
         "reply": "Hi Aiyana,\n\nThanks for already trying these: update to the latest version, sign out and back in, reset the local cache. The next steps are:\n\n1. Reinstall the app. Uninstall Quillstack, download the latest installer from quillstack.example/download, and install it again.\n\nThese steps come from our guide \"Desktop app is not syncing changes\" (KB-104). If they don't solve the problem, reply here and tell us what you see.\n\nLily\nQuillstack's AI support assistant",

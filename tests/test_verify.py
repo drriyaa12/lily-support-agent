@@ -41,5 +41,35 @@ class VerifyCommandTests(unittest.TestCase):
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
 
 
+class VerifyCoverageTests(unittest.TestCase):
+    """Review findings: verify must notice stale transcripts and reports, and ignore line endings."""
+
+    def test_a_stale_transcript_is_reported(self):
+        import shutil
+        import tempfile
+        from pathlib import Path
+        from lily.verify import verify
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for part in ("data", "eval", "results", "docs"):
+                shutil.copytree(ROOT / part, root / part)
+            transcript = root / "results" / "heuristic-dev" / "transcripts" / "C05.md"
+            transcript.write_text(transcript.read_text() + "\nedited by hand\n")
+            problems = verify(root)
+        self.assertTrue(any("C05.md" in p for p in problems), problems)
+
+    def test_line_endings_do_not_change_the_labels_hash(self):
+        import tempfile
+        from pathlib import Path
+        from lily.evaluate import build_meta
+
+        with tempfile.TemporaryDirectory() as tmp:
+            lf, crlf = Path(tmp) / "lf.json", Path(tmp) / "crlf.json"
+            lf.write_bytes(b'[\n  {"a": 1}\n]\n')
+            crlf.write_bytes(b'[\r\n  {"a": 1}\r\n]\r\n')
+            self.assertEqual(build_meta(lf, "h", "d", "c")["cases_sha256"], build_meta(crlf, "h", "d", "c")["cases_sha256"])
+
+
 if __name__ == "__main__":
     unittest.main()

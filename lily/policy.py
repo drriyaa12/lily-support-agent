@@ -109,6 +109,7 @@ def decide(inv: Investigation) -> Decision:
         return done("escalate", "ungrounded_evidence",
                     f"No quote from {best.id} could be verified, so the reply would not be grounded.", article=best)
 
+    trace.append("9. Otherwise: resolve with the steps not tried yet")
     return done("resolve", "supported_fix",
                 f"{best.id} covers this and {len(remaining)} step(s) have not been tried yet."
                 if best.steps else f"{best.id} answers this directly.",

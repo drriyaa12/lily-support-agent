@@ -1,6 +1,6 @@
 # Lily evaluation results: held-out set, heuristic analyzer
 
-- Generated 2026-11-04 21:13 UTC with `python3 -m lily eval --cases eval/heldout_cases.json`
+- Generated 2026-11-04 21:23 UTC with `python3 -m lily eval --cases eval/heldout_cases.json`
 - 10 cases from `eval/heldout_cases.json` (sha256 `3eedb5e35ab9`)
 - **Lily**: investigator + decision policy, offline heuristic analyzer (no API calls)
 - **baseline**: same KB search and threshold; sends every step of the top article, otherwise escalates

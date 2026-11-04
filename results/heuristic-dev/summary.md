@@ -1,6 +1,6 @@
 # Lily evaluation results: development set, heuristic analyzer
 
-- Generated 2026-11-04 21:13 UTC with `python3 -m lily eval`
+- Generated 2026-11-04 21:23 UTC with `python3 -m lily eval`
 - 26 cases from `eval/cases.json` (sha256 `a1fc2b715105`)
 - **Lily**: investigator + decision policy, offline heuristic analyzer (no API calls)
 - **baseline**: same KB search and threshold; sends every step of the top article, otherwise escalates
